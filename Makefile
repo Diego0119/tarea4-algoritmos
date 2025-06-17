@@ -25,5 +25,5 @@ clean:
 	rm -rf $(OBJ_DIR)/*.o $(TARGET)
 
 run:
-	cd build && ./program --help
+	cd build && ./program 
 
