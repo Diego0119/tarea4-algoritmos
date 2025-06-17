@@ -24,7 +24,9 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 .PHONY: clean folders send run run-val
 
 run: all
-	./$(BUILD_DIR)/$(EXEC) 
+	./$(BUILD_DIR)/$(EXEC) -h
+	./$(BUILD_DIR)/$(EXEC) -v
+	./$(BUILD_DIR)/$(EXEC) -j
 
 clean:
 	rm -f $(OBJ_FILES)
@@ -37,4 +39,6 @@ send:
 	tar czf $(GRUPO)-$(NTAR).tgz --transform 's,^,$(GRUPO)-$(NTAR)/,' Makefile src incs docs
 
 run-val: all
-	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC)
+	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -h
+	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -v
+	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -j

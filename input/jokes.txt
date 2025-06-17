@@ -1,0 +1,10 @@
+¿Por qué el teclado rompió con la computadora? Porque estaba cansado de que siempre lo presionaran.
+Antes pensaba que mi vida era triste... luego conocí `rm -rf /`.
+Una vez soñé que era root... y cuando desperté, todo estaba roto.
+Soy tan bueno depurando código que mis bugs tienen miedo de compilar.
+¿Cuál es el colmo de un programador? Que su hijo se llame “Error” y nadie se lo pueda encontrar.
+Yo no elimino bugs, los convierto en *features* documentadas.
+¿Qué le dice un bit al otro? Nos vemos en el bus.
+¿Por qué el computador fue al médico? Porque tenía un virus.
+Cariño, creo que tienes un problema con la RAM. ¿Por qué? Porque olvidas todo lo que te digo en menos de 3 segundos.
+Mi jefe me dijo que hiciera un programa que corriera en cualquier computadora... así que lo imprimí.
