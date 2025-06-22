@@ -30,3 +30,29 @@ void open_file_error(const char *file, int line, const char *filename)
 {
     handle_error("No se pudo abrir el archivo", filename, file, line);
 }
+
+void read_csv_error(const char *file, int line, const char *filename)
+{
+    handle_error("No se puedo leer el archivo CSV de pruebas", filename, file, line);
+}
+
+void dimensions_error(const char *file, int line, const char *filename)
+{
+    handle_error("Error al determinar dimensiones del archivo CSV", filename, file, line);
+}
+
+void csv_struct_error(const char *file, int line, CSVData *csv_data)
+{
+    if (csv_data != NULL)
+        free(csv_data);
+
+    handle_error("Error al crear la estructura CSVData", "Memoria insuficiente", file, line);
+}
+
+void matrix_struct_error(const char *file, int line, Matrix *matrix)
+{
+    if (matrix != NULL)
+        free(matrix);
+
+    handle_error("Error al crear la estructura Matrix", "Memoria insuficiente", file, line);
+}
