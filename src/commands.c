@@ -5,7 +5,11 @@
  * @description: Archivo para procesar los argumentos de la línea de comandos.
  */
 
-#include "header.h"
+#include "libs.h"
+#include "config.h"
+#include "csv.h"
+#include "utils.h"
+#include "errors.h"
 
 void parse_args(char *argv[])
 {

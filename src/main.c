@@ -5,7 +5,9 @@
  * @description: Archivo principal del proyecto de C.
  */
 
-#include "header.h"
+#include "libs.h"
+#include "errors.h"
+#include "utils.h"
 
 int main(int argc, char *argv[])
 {

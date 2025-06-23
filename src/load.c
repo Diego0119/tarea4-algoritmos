@@ -5,7 +5,10 @@
  * @description: Archivo para cargar y procesar datos de un archivo CSV.
  */
 
-#include "header.h"
+#include "libs.h"
+#include "csv.h"
+#include "config.h"
+#include "errors.h"
 
 CSVData *load_csv_data(const char *filename, int has_header, int label_col, char delimiter)
 {

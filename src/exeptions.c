@@ -5,7 +5,9 @@
  * @description: Archivo para manejar excepciones y errores en el proyecto de C.
  */
 
-#include "header.h"
+#include "libs.h"
+#include "config.h"
+#include "csv.h"
 
 void handle_error(const char *header, const char *detail, const char *file, int line)
 {

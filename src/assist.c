@@ -5,7 +5,9 @@
  * @description: Archivo con funciones auxiliares para el proyecto de C.
  */
 
-#include "header.h"
+#include "libs.h"
+#include "config.h"
+#include "csv.h"
 
 void show_help(void)
 {

@@ -5,7 +5,9 @@
  * @description: Archivo para manejar operaciones con matrices en el proyecto de C.
  */
 
-#include "header.h"
+#include "libs.h"
+#include "matrix.h"
+#include "errors.h"
 
 Matrix *matrix_create(int rows, int cols)
 {
