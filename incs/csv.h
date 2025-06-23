@@ -1,5 +1,5 @@
 /*
- * @file: header.h
+ * @file: csv.h
  * @authors: Miguel Loaiza, Diego Sanhueza y Duvan Figueroa
  * @date: 17/06/2025
  * @description: Cabecera general de las funciones relacionadas a manejo de csv.
