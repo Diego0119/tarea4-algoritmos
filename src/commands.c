@@ -22,13 +22,18 @@ void parse_args(char *argv[])
     {
         if (argv[2] != NULL)
         {
+            const char *filename = argv[2];
+            const char *extension = strrchr(filename, '.');
+            if (extension == NULL || strcmp(extension, ".csv") != 0)
+                csv_extension_error(__FILE__, __LINE__, filename);
+
             fprintf(stdout, CYAN_COLOR "\nArchivo de datos de prueba desde: %s\n" RESET_COLOR, argv[2]);
 
-            CSVData *csv_data = load_csv_data(argv[2], 1, 4, ',');
+            CSVData *csv_data = load_csv_data(filename, 1, 4, ',');
             if (!csv_data)
-                read_csv_error(__FILE__, __LINE__, argv[2]);
+                read_csv_error(__FILE__, __LINE__, filename);
 
-            fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente.\n" RESET_COLOR);
+            fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
 
             print_csv_data(csv_data);
 

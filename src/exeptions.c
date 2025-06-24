@@ -46,7 +46,7 @@ void read_csv_error(const char *file, int line, const char *filename)
 // Error al determinar las dimensiones del archivo CSV
 void dimensions_error(const char *file, int line, const char *filename)
 {
-    handle_error("Error al determinar dimensiones del archivo CSV", filename, file, line);
+    handle_error("Dimensiones mal determinadas en el archivo CSV", filename, file, line);
 }
 
 // Error al crear la estructura CSVData
@@ -55,7 +55,7 @@ void csv_struct_error(const char *file, int line, CSVData *csv_data)
     if (csv_data != NULL)
         free(csv_data);
 
-    handle_error("Error al crear la estructura CSVData", "Memoria insuficiente", file, line);
+    handle_error("No se pudo crear la estructura CSVData", "Memoria insuficiente", file, line);
 }
 
 // Error al crear la estructura Matrix
@@ -64,5 +64,10 @@ void matrix_struct_error(const char *file, int line, Matrix *matrix)
     if (matrix != NULL)
         free(matrix);
 
-    handle_error("Error al crear la estructura Matrix", "Memoria insuficiente", file, line);
+    handle_error("No se pudo crear la estructura Matrix", "Memoria insuficiente", file, line);
+}
+
+void csv_extension_error(const char *file, int line, const char *filename)
+{
+    handle_error("La extension del archivo no es .csv", filename, file, line);
 }

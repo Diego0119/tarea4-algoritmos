@@ -20,5 +20,6 @@ void read_csv_error(const char *, int, const char *);
 void dimensions_error(const char *, int, const char *);
 void csv_struct_error(const char *, int, CSVData *);
 void matrix_struct_error(const char *, int, Matrix *);
+void csv_extension_error(const char *, int, const char *);
 
 #endif
