@@ -8,6 +8,7 @@
 #include "libs.h"
 #include "k-means.h"
 #include "config.h"
+#include "matrix.h"
 
 // Crea una copia aleatoria de K puntos del dataset como centroides iniciales
 Matrix *initialize_centroids(Matrix *data, int k)
@@ -22,18 +23,6 @@ Matrix *initialize_centroids(Matrix *data, int k)
         }
     }
     return centroids;
-}
-
-// Calcula distancia Euclidiana entre dos vectores
-double euclidean_distance(const double *a, const double *b, int length)
-{
-    double sum = 0.0;
-    for (int i = 0; i < length; i++)
-    {
-        double diff = a[i] - b[i];
-        sum += diff * diff;
-    }
-    return sqrt(sum);
 }
 
 // Asigna cada punto al centroide mas cercano

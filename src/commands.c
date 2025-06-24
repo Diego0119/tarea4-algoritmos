@@ -37,6 +37,8 @@ void parse_args(char *argv[])
 
             print_csv_data(csv_data);
 
+            exec_knn(csv_data);
+
             csv_free(csv_data);
         }
         else

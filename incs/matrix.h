@@ -18,5 +18,9 @@ typedef struct
 // Funciones de manejo de matrices
 Matrix *matrix_create(int, int);
 void matrix_free(Matrix *);
+Matrix *matrix_multiply(Matrix *, Matrix *);
+Matrix *matrix_transpose(Matrix *);
+Matrix *matrix_subtract(Matrix *, Matrix *);
+double euclidean_distance(const double *, const double *, int);
 
 #endif

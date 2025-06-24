@@ -247,3 +247,105 @@ void csv_free(CSVData *csv_data)
 
     free(csv_data);
 }
+
+// Función para dividir un conjunto de datos en conjuntos de entrenamiento y prueba
+int train_test_split(Matrix *data, Matrix *labels, double test_ratio, Matrix **X_train, Matrix **y_train, Matrix **X_test, Matrix **y_test)
+{
+    if (!data || test_ratio < 0.0 || test_ratio > 1.0)
+        return 0;
+
+    int n_samples = data->rows;
+    int n_features = data->cols;
+
+    // Calcular tamaños de conjuntos de entrenamiento y prueba
+    int test_size = (int)(test_ratio * n_samples);
+    int train_size = n_samples - test_size;
+    if (train_size <= 0 || test_size <= 0)
+        return 0;
+
+    // Crear matrices para los conjuntos de entrenamiento y prueba
+    *X_train = matrix_create(train_size, n_features);
+    *X_test = matrix_create(test_size, n_features);
+
+    if (!*X_train || !*X_test)
+    {
+        if (*X_train)
+            matrix_free(*X_train);
+        if (*X_test)
+            matrix_free(*X_test);
+        return 0;
+    }
+
+    // Si hay etiquetas, crear matrices para ellas también
+    if (labels)
+    {
+        *y_train = matrix_create(train_size, 1);
+        *y_test = matrix_create(test_size, 1);
+
+        if (!*y_train || !*y_test)
+        {
+            matrix_free(*X_train);
+            matrix_free(*X_test);
+            if (*y_train)
+                matrix_free(*y_train);
+            if (*y_test)
+                matrix_free(*y_test);
+            return 0;
+        }
+    }
+    else
+    {
+        *y_train = NULL;
+        *y_test = NULL;
+    }
+
+    // Crear un arreglo de índices y mezclarlo aleatoriamente
+    int *index = (int *)malloc(n_samples * sizeof(int));
+    if (!index)
+    {
+        matrix_free(*X_train);
+        matrix_free(*X_test);
+        if (*y_train)
+            matrix_free(*y_train);
+        if (*y_test)
+            matrix_free(*y_test);
+        return 0;
+    }
+
+    for (int i = 0; i < n_samples; i++)
+        index[i] = i;
+
+    // Mezclar los índices (Fisher-Yates shuffle)
+    for (int i = n_samples - 1; i > 0; i--)
+    {
+        int j = rand() % (i + 1);
+        int temp = index[i];
+        index[i] = index[j];
+        index[j] = temp;
+    }
+
+    // Llenar conjuntos de entrenamiento y prueba
+    for (int i = 0; i < train_size; i++)
+    {
+        int idx = index[i];
+        for (int j = 0; j < n_features; j++)
+            (*X_train)->data[i][j] = data->data[idx][j];
+
+        if (labels && *y_train)
+            (*y_train)->data[i][0] = labels->data[idx][0];
+    }
+
+    for (int i = 0; i < test_size; i++)
+    {
+        int idx = index[train_size + i];
+        for (int j = 0; j < n_features; j++)
+            (*X_test)->data[i][j] = data->data[idx][j];
+
+        if (labels && *y_test)
+            (*y_test)->data[i][0] = labels->data[idx][0];
+    }
+
+    free(index);
+
+    return 1;
+}

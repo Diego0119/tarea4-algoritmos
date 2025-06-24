@@ -9,18 +9,20 @@
 #define KNN_H
 
 #include "matrix.h"
+#include "csv.h"
 
-typedef struct {
-    Matrix* X_train;    // Datos de entrenamiento
-    Matrix* y_train;    // Etiquetas de entrenamiento
-    int k;              // Número de vecinos a considerar
+typedef struct
+{
+    Matrix *X_train; // Datos de entrenamiento
+    Matrix *y_train; // Etiquetas de entrenamiento
+    int k;           // Número de vecinos a considerar
 } KNNClassifier;
 
-
 // Funciones del algoritmo K-Nearest Neighbors (KNN)
-KNNClassifier* knn_create(int);
-void knn_fit(KNNClassifier*, Matrix*, Matrix*);
-Matrix* knn_predict(KNNClassifier*, Matrix*);
-void knn_free(KNNClassifier*);
+void exec_knn(CSVData *);
+KNNClassifier *knn_create(int);
+void knn_fit(KNNClassifier *, Matrix *, Matrix *);
+Matrix *knn_predict(KNNClassifier *, Matrix *);
+void knn_free(KNNClassifier *);
 
 #endif

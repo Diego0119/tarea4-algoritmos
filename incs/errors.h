@@ -10,6 +10,7 @@
 
 #include "csv.h"
 #include "matrix.h"
+#include "knn.h"
 
 // Funciones de manejo de errores
 void handle_error(const char *, const char *, const char *, int);
@@ -21,5 +22,8 @@ void dimensions_error(const char *, int, const char *);
 void csv_struct_error(const char *, int, CSVData *);
 void matrix_struct_error(const char *, int, Matrix *);
 void csv_extension_error(const char *, int, const char *);
+void train_test_split_error(const char *, int);
+void create_knn_classifier_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, KNNClassifier *);
+void predict_knn_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, KNNClassifier *);
 
 #endif
