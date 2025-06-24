@@ -1,5 +1,5 @@
 /*
- * @file: header.h
+ * @file: libs.h
  * @authors: Miguel Loaiza, Diego Sanhueza y Duvan Figueroa
  * @date: 17/06/2025
  * @description: Cabecera general de las librerias de C.
