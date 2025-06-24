@@ -1,3 +1,10 @@
+/*
+ * @file: k-means.h
+ * @authors: Miguel Loaiza, Diego Sanhueza y Duvan Figueroa
+ * @date: 24/06/2025
+ * @description: Desarrollo del algoritmo K-Means para clustering de datos.
+ */
+
 #include "libs.h"
 #include "k-means.h"
 #include "config.h"
@@ -91,6 +98,7 @@ int has_converged(Matrix *old, Matrix *new, double tol)
     return 1; // convergioo
 }
 
+// Función para ajustar el algoritmo K-Means
 KMeansResult *kmeans_fit(Matrix *data, int k, int max_iters, double tol)
 {
     Matrix *centroids = initialize_centroids(data, k);
@@ -122,6 +130,7 @@ KMeansResult *kmeans_fit(Matrix *data, int k, int max_iters, double tol)
     return result;
 }
 
+// Libera la memoria utilizada por el resultado del K-Means
 void kmeans_free(KMeansResult *result)
 {
     matrix_free(result->centroids);

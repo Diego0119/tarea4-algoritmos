@@ -9,6 +9,7 @@
 #include "config.h"
 #include "csv.h"
 
+// Muestra un mensaje de ayuda del programa
 void show_help(void)
 {
     fprintf(stdout, CYAN_COLOR "\nAyuda del programa:\n\n");
@@ -23,12 +24,14 @@ void show_help(void)
     exit(EXIT_SUCCESS);
 }
 
+// Muestra la versión del programa
 void show_version(void)
 {
-    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 1.1.0\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 1.3.1\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 
+// Imprime los datos al cargar el DF a la estructura CSVData
 void print_csv_data(CSVData *csv_data)
 {
     fprintf(stdout, "\nDimensiones de los datos: %d filas x %d columnas\n", csv_data->data->rows, csv_data->data->cols);

@@ -9,6 +9,7 @@
 #include "errors.h"
 #include "utils.h"
 
+// Función principal
 int main(int argc, char *argv[])
 {
     if (argc < 2)

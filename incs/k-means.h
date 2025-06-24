@@ -1,8 +1,8 @@
 /*
  * @file: k-means.h
  * @authors: Miguel Loaiza, Diego Sanhueza y Duvan Figueroa
- * @date: 17/06/2025
- * @description: Cabecera general de funciones auxiliares.
+ * @date: 23/06/2025
+ * @description: Cabecera general de funciones auxiliares para el algoritmo K-Means.
  */
 
 #ifndef KMEANS_H
@@ -18,13 +18,13 @@ typedef struct
     double tolerance;  // Criterio de convergencia
 } KMeansResult;
 
-KMeansResult *kmeans_fit(Matrix *data, int k, int max_iters, double tol);
-void kmeans_free(KMeansResult *result);
-
-Matrix *initialize_centroids(Matrix *data, int k);
-double euclidean_distance(const double *a, const double *b, int length);
-void assign_clusters(Matrix *data, Matrix *centroids, int *labels);
-void update_centroids(Matrix *data, Matrix *centroids, int *labels, int k);
-int has_converged(Matrix *old, Matrix *new, double tol);
+// Funciones del algoritmo K-Means
+KMeansResult *kmeans_fit(Matrix *, int, int, double);
+void kmeans_free(KMeansResult *);
+Matrix *initialize_centroids(Matrix *, int);
+double euclidean_distance(const double *, const double *, int);
+void assign_clusters(Matrix *, Matrix *, int *);
+void update_centroids(Matrix *, Matrix *, int *, int);
+int has_converged(Matrix *, Matrix *, double);
 
 #endif

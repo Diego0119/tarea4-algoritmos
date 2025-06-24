@@ -11,6 +11,7 @@
 #include "utils.h"
 #include "errors.h"
 
+// Se encarga de procesar los argumentos de la línea de comandos (EN EL FUTURO CAMBIAR POR GETOPT)
 void parse_args(char *argv[])
 {
     if (strcmp(argv[1], "-h") == 0 || strcmp(argv[1], "--help") == 0)

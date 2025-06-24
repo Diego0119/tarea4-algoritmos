@@ -9,6 +9,7 @@
 #include "matrix.h"
 #include "errors.h"
 
+// Función para crear una nueva matriz
 Matrix *matrix_create(int rows, int cols)
 {
     Matrix *matrix = (Matrix *)malloc(sizeof(Matrix));
@@ -40,6 +41,7 @@ Matrix *matrix_create(int rows, int cols)
     return matrix;
 }
 
+// Función para liberar la memoria de una matriz
 void matrix_free(Matrix *matrix)
 {
     if (!matrix)

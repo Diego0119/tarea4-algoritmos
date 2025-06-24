@@ -10,6 +10,7 @@
 #include "config.h"
 #include "errors.h"
 
+// Función para cargar datos desde un archivo CSV
 CSVData *load_csv_data(const char *filename, int has_header, int label_col, char delimiter)
 {
     int rows, cols;
@@ -159,6 +160,7 @@ CSVData *load_csv_data(const char *filename, int has_header, int label_col, char
     return csv_data;
 }
 
+// Función para determinar las dimensiones de un archivo CSV
 int csv_dimensions(const char *filename, int has_header, char delimiter, int *rows, int *cols)
 {
     FILE *file = fopen(filename, "r");
@@ -195,6 +197,7 @@ int csv_dimensions(const char *filename, int has_header, char delimiter, int *ro
     return 1;
 }
 
+// Función personalizada de duplicación de cadenas
 char *my_strdup(const char *s)
 {
     if (s == NULL)
@@ -209,6 +212,7 @@ char *my_strdup(const char *s)
     return (char *)memcpy(new_str, s, len);
 }
 
+// Liberar memoria de la estructura CSVData
 void csv_free(CSVData *csv_data)
 {
     if (!csv_data)
