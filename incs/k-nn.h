@@ -1,5 +1,5 @@
 /*
- * @file: knn.h
+ * @file: k-nn.h
  * @authors: Miguel Loaiza, Diego Sanhueza y Duvan Figueroa
  * @date: 24/06/2025
  * @description: Cabecera general de funciones auxiliares para el algoritmo K-Nearest Neighbors (KNN).

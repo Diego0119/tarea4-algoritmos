@@ -10,7 +10,7 @@
 
 #include "csv.h"
 #include "matrix.h"
-#include "knn.h"
+#include "k-nn.h"
 
 // Funciones de manejo de errores
 void handle_error(const char *, const char *, const char *, int);

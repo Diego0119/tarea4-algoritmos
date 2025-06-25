@@ -8,7 +8,7 @@
 #include "libs.h"
 #include "config.h"
 #include "csv.h"
-#include "knn.h"
+#include "k-nn.h"
 
 // Función principal para manejar errores de manera centralizada
 void handle_error(const char *header, const char *detail, const char *file, int line)

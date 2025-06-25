@@ -6,7 +6,7 @@
  */
 
 #include "libs.h"
-#include "knn.h"
+#include "k-nn.h"
 #include "config.h"
 #include "csv.h"
 #include "errors.h"
