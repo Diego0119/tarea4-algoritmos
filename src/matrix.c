@@ -113,17 +113,3 @@ Matrix *matrix_subtract(Matrix *a, Matrix *b)
 
     return result; // Devolver la matriz resultado
 }
-
-// Función para calcular la distancia euclidiana entre dos vectores
-double euclidean_distance(const double *x1, const double *x2, int n)
-{
-    double sum = 0.0; // Inicializar la suma de las diferencias al cuadrado
-
-    for (int i = 0; i < n; i++)
-    {
-        double diff = x1[i] - x2[i]; // Calcular la diferencia entre los elementos
-        sum += diff * diff;          // Sumar el cuadrado de la diferencia
-    }
-
-    return sqrt(sum); // Devolver la raíz cuadrada de la suma de las diferencias al cuadrado
-}

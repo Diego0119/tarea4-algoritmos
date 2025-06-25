@@ -18,14 +18,23 @@ void parse_args(char *argv[])
         show_help();
     else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0)
         show_version();
-    else if (strcmp(argv[1], "-t") == 0 || strcmp(argv[1], "-test") == 0)
+    else if (strcmp(argv[1], "-knn") == 0)
     {
         if (argv[2] != NULL)
         {
             const char *filename = argv[2];
             const char *extension = strrchr(filename, '.');
-            if (extension == NULL || strcmp(extension, ".csv") != 0)
+            if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx") != 0))
                 csv_extension_error(__FILE__, __LINE__, filename);
+
+            if (argv[3] == NULL)
+                argument_error(argv[3], __FILE__, __LINE__);
+
+            int k = atoi(argv[3]);
+            if (k <= 0)
+                argument_error(argv[3], __FILE__, __LINE__);
+            else
+                fprintf(stdout, CYAN_COLOR "\nNúmero de vecinos (k): %d\n" RESET_COLOR, k);
 
             fprintf(stdout, CYAN_COLOR "\nArchivo de datos de prueba desde: %s\n" RESET_COLOR, argv[2]);
 
@@ -37,7 +46,7 @@ void parse_args(char *argv[])
 
             print_csv_data(csv_data);
 
-            exec_knn(csv_data);
+            exec_knn(csv_data, k);
 
             csv_free(csv_data);
         }

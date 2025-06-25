@@ -12,6 +12,8 @@
 // Función principal
 int main(int argc, char *argv[])
 {
+    srand(time(NULL));
+
     if (argc < 2)
         number_arguments_error(__FILE__, __LINE__);
 

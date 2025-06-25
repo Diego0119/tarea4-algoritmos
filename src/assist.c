@@ -18,17 +18,17 @@ void show_help(void)
     fprintf(stdout, CYAN_COLOR "Opciones:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t-h, --help\tMuestra esta ayuda.\n");
     fprintf(stdout, "\t-v, --version\tMuestra la version del programa.\n");
-    fprintf(stdout, "\t-t, --test\tCargar un DF para comenzar las pruebas.\n\n" RESET_COLOR);
+    fprintf(stdout, "\t-knn\t\tAplicar algoritmo K-Nearest Neighboors.\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "Ejemplos:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out -h\n");
-    fprintf(stdout, "\t./build/program.out -t ./input/iris.csv\n\n" RESET_COLOR);
+    fprintf(stdout, "\t./build/program.out -knn ./input/iris.csv\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 
 // Muestra la versión del programa
 void show_version(void)
 {
-    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 1.3.2\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 1.3.3\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 

@@ -18,5 +18,6 @@
 #define N_OF_CHARS 256       // Número máximo de caracteres en una palabra
 #define MAX_LINE_LENGTH 4096 // Longitud máxima de una línea en el CSV
 #define MAX_FIELDS 256       // Número máximo de campos en una línea del CSV
+#define MAX_CLASSES 10       // Número máximo de clases en el KNN
 
 #endif
