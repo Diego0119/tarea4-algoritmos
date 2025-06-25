@@ -28,10 +28,13 @@ typedef struct
 void exec_knn(CSVData *, int);
 KNNClassifier *knn_create(int);
 void knn_fit(KNNClassifier *, Matrix *, Matrix *);
-Matrix *knn_predict(KNNClassifier *, Matrix *);
+Matrix *knn_predict(KNNClassifier *, Matrix *, int);
 void knn_free(KNNClassifier *);
+
+// Funciones auxiliares para el algoritmo KNN
 void quicksort(DistanceLabel *, int, int);
 int partition(DistanceLabel *, int, int);
 double euclidean_distance(const double *, const double *, int);
+double manhattan_distance(const double *, const double *, int);
 
 #endif

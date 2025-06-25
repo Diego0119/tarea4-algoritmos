@@ -22,36 +22,34 @@ void parse_args(char *argv[])
     {
         if (argv[2] != NULL)
         {
-            const char *filename = argv[2];
-            const char *extension = strrchr(filename, '.');
-            if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx") != 0))
-                csv_extension_error(__FILE__, __LINE__, filename);
+            int k = atoi(argv[2]);
+            if (k <= 0 || k % 2 == 0)
+                k_parameter_error(__FILE__, __LINE__);
 
-            if (argv[3] == NULL)
-                argument_error(argv[3], __FILE__, __LINE__);
+            if (argv[3] != NULL)
+            {
+                const char *filename = argv[3];
+                const char *extension = strrchr(filename, '.');
+                if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx") != 0))
+                    csv_extension_error(__FILE__, __LINE__, filename);
 
-            int k = atoi(argv[3]);
-            if (k <= 0)
-                argument_error(argv[3], __FILE__, __LINE__);
+                CSVData *csv_data = load_csv_data(filename, 1, 4, ',');
+                if (!csv_data)
+                    read_csv_error(__FILE__, __LINE__, filename);
+
+                fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
+
+                print_csv_data(csv_data);
+
+                exec_knn(csv_data, k);
+
+                csv_free(csv_data);
+            }
             else
-                fprintf(stdout, CYAN_COLOR "\nNúmero de vecinos (k): %d\n" RESET_COLOR, k);
-
-            fprintf(stdout, CYAN_COLOR "\nArchivo de datos de prueba desde: %s\n" RESET_COLOR, argv[2]);
-
-            CSVData *csv_data = load_csv_data(filename, 1, 4, ',');
-            if (!csv_data)
-                read_csv_error(__FILE__, __LINE__, filename);
-
-            fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
-
-            print_csv_data(csv_data);
-
-            exec_knn(csv_data, k);
-
-            csv_free(csv_data);
+                argument_error(argv[3], __FILE__, __LINE__);
         }
         else
-            number_arguments_error(__FILE__, __LINE__);
+            argument_error(argv[2], __FILE__, __LINE__);
     }
     else
         argument_error(argv[1], __FILE__, __LINE__);

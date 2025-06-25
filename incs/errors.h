@@ -25,5 +25,6 @@ void csv_extension_error(const char *, int, const char *);
 void train_test_split_error(const char *, int);
 void create_knn_classifier_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, KNNClassifier *);
 void predict_knn_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, KNNClassifier *);
+void k_parameter_error(const char *, int);
 
 #endif

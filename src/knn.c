@@ -32,31 +32,50 @@ void exec_knn(CSVData *csv_data, int k)
     // Entrenar el modelo (knn_fit es void, no devuelve valor)
     knn_fit(knn, X_train, y_train);
 
-    fprintf(stdout, "\nUsando Métrica de Distancia Euclidiana\n");
+    fprintf(stdout, CYAN_COLOR "\nUsando Métrica de Distancia Euclidiana\n\n" RESET_COLOR);
 
-    // Realizar predicciones
-    Matrix *y_pred_eucledian = knn_predict(knn, X_test);
+    // Realizar predicciones con distancia Euclidiana
+    Matrix *y_pred_eucledian = knn_predict(knn, X_test, 0); // 0 para usar distancia euclidiana
     if (!y_pred_eucledian)
         predict_knn_error(__FILE__, __LINE__, X_train, y_train, X_test, y_test, knn);
 
-    fprintf(stdout, "Predicciones realizadas con éxito.\n");
-
-    // Calcular precisión (porcentaje de predicciones correctas)
-    int correct = 0;
+    // Calcular precisión con métrica euclidiana (porcentaje de predicciones correctas)
+    int correct_euclidean = 0;
     for (int i = 0; i < y_test->rows; i++)
         if (y_test->data[i][0] == y_pred_eucledian->data[i][0])
-            correct++;
+            correct_euclidean++;
 
-    double precision = (double)correct / y_test->rows;
+    double precision_euclidean = (double)correct_euclidean / y_test->rows;
 
-    fprintf(stdout, "Precisión del modelo KNN (k=%d, Euclidiana): %.4f\n", k, precision);
-
-    // Mostrar algunas predicciones
-    fprintf(stdout, "\nPrimeras 5 predicciones:\n");
+    fprintf(stdout, YELLOW_COLOR "Primeras 5 predicciones:\n\n" RESET_COLOR);
     for (int i = 0; i < 5 && i < y_test->rows; i++)
         fprintf(stdout, "Real: %.0f, Predicción: %.0f\n", y_test->data[i][0], y_pred_eucledian->data[i][0]);
 
+    fprintf(stdout, GREEN_COLOR "\nPrecisión del modelo KNN (k=%d, Euclidiana): %.4f\n\n" RESET_COLOR, k, precision_euclidean);
+
+    fprintf(stdout, CYAN_COLOR "Usando Métrica de Distancia Manhattan\n\n" RESET_COLOR);
+
+    // Realizar predicciones con distancia Manhattan
+    Matrix *y_pred_manhattan = knn_predict(knn, X_test, 1); // 1 para usar distancia Manhattan
+    if (!y_pred_manhattan)
+        predict_knn_error(__FILE__, __LINE__, X_train, y_train, X_test, y_test, knn);
+
+    // Calcular precisión con métrica manhattan (porcentaje de predicciones correctas)
+    int correct_manhattan = 0;
+    for (int i = 0; i < y_test->rows; i++)
+        if (y_test->data[i][0] == y_pred_manhattan->data[i][0])
+            correct_manhattan++;
+
+    double precision_manhattan = (double)correct_manhattan / y_test->rows;
+
+    fprintf(stdout, YELLOW_COLOR "Primeras 5 predicciones:\n\n" RESET_COLOR);
+    for (int i = 0; i < 5 && i < y_test->rows; i++)
+        fprintf(stdout, "Real: %.0f, Predicción: %.0f\n", y_test->data[i][0], y_pred_manhattan->data[i][0]);
+
+    fprintf(stdout, GREEN_COLOR "\nPrecisión del modelo KNN (k=%d, Manhattan): %.4f\n\n" RESET_COLOR, k, precision_manhattan);
+
     matrix_free(y_pred_eucledian);
+    matrix_free(y_pred_manhattan);
 }
 
 // Crea un clasificador KNN con el número de vecinos k especificado
@@ -89,7 +108,7 @@ void knn_fit(KNNClassifier *knn, Matrix *X, Matrix *y)
 }
 
 // Predecir las etiquetas para los datos de entrada X utilizando el clasificador KNN
-Matrix *knn_predict(KNNClassifier *knn, Matrix *X)
+Matrix *knn_predict(KNNClassifier *knn, Matrix *X, int distance_metric)
 {
     if (!knn || !X || !knn->X_train || !knn->y_train) // Verificar que el clasificador y los datos sean válidos
         return NULL;
@@ -112,8 +131,12 @@ Matrix *knn_predict(KNNClassifier *knn, Matrix *X)
         // Calculo distancia euclidiana a todas las muestras de entrenamiento
         for (int j = 0; j < knn->X_train->rows; j++)
         {
-            distances[j].distance = euclidean_distance(X->data[i], knn->X_train->data[j], X->cols); // Calcular la distancia euclidiana
-            distances[j].label = knn->y_train->data[j][0];                                          // Almacenar la etiqueta correspondiente
+            if (distance_metric == 0)
+                distances[j].distance = euclidean_distance(X->data[i], knn->X_train->data[j], X->cols); // Calcular la distancia Euclidiana
+            else if (distance_metric == 1)
+                distances[j].distance = manhattan_distance(X->data[i], knn->X_train->data[j], X->cols); // Calcular la distancia Manhattan
+
+            distances[j].label = knn->y_train->data[j][0]; // Almacenar la etiqueta correspondiente
         }
 
         // Ordenar las distancias para encontrar los k vecinos más cercanos
@@ -229,4 +252,17 @@ double euclidean_distance(const double *x1, const double *x2, int n)
     }
 
     return sqrt(sum); // Devolver la raíz cuadrada de la suma de las diferencias al cuadrado
+}
+
+double manhattan_distance(const double *x1, const double *x2, int n)
+{
+    double sum = 0.0; // Inicializar la suma de las diferencias absolutas
+
+    for (int i = 0; i < n; i++)
+    {
+        double diff = fabs(x1[i] - x2[i]); // Calcular la diferencia absoluta entre los elementos
+        sum += diff;                       // Sumar la diferencia absoluta
+    }
+
+    return sum; // Devolver la suma de las diferencias absolutas
 }

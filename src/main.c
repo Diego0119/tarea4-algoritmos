@@ -12,7 +12,7 @@
 // Función principal
 int main(int argc, char *argv[])
 {
-    srand(time(NULL));
+    srand(3);
 
     if (argc < 2)
         number_arguments_error(__FILE__, __LINE__);

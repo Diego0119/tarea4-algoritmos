@@ -97,3 +97,8 @@ void predict_knn_error(const char *file, int line, Matrix *X_train, Matrix *y_tr
     matrix_free(y_test);
     handle_error("No se pudieron realizar predicciones con KNN", "Verifique los datos de entrada", file, line);
 }
+
+void k_parameter_error(const char *file, int line)
+{
+    handle_error("El valor de k (numero de vecinos) es invalido", "Debe ser un entero positivo e impar", file, line);
+}
