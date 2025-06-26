@@ -9,20 +9,28 @@
 #include "config.h"
 #include "csv.h"
 
-// Muestra un mensaje de ayuda del programa
+// muestra un mensaje de ayuda del programa
 void show_help(void)
 {
-    fprintf(stdout, CYAN_COLOR "\nAyuda del programa:\n\n");
-    fprintf(stdout, "Uso:\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "\nayuda del programa:\n\n");
+    fprintf(stdout, "uso:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out [opcion]\n");
-    fprintf(stdout, "\t./build/program.out [opcion] [vecinos] [archivo]\n\n" RESET_COLOR);
-    fprintf(stdout, CYAN_COLOR "Opciones:\n" RESET_COLOR);
-    fprintf(stdout, YELLOW_COLOR "\t-h, --help\tMuestra esta ayuda.\n");
-    fprintf(stdout, "\t-v, --version\tMuestra la version del programa.\n");
-    fprintf(stdout, "\t-knn\t\tAplicar algoritmo K-Nearest Neighboor.\n\n" RESET_COLOR);
-    fprintf(stdout, CYAN_COLOR "Ejemplos:\n" RESET_COLOR);
+    fprintf(stdout, "\t./build/program.out [opcion] [parametros] [archivo]\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "opciones:\n" RESET_COLOR);
+    fprintf(stdout, YELLOW_COLOR "\t-h, --help\t\tmuestra esta ayuda.\n");
+    fprintf(stdout, "\t-v, --version\t\tmuestra la version del programa.\n");
+    fprintf(stdout, "\t-knn [k] [archivo]\taplicar algoritmo k-nearest neighbors.\n");
+    fprintf(stdout, "\t-lr, -linear [archivo] [lr] [iter] [tol]\taplicar regresion lineal.\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "parametros de regresion lineal:\n" RESET_COLOR);
+    fprintf(stdout, YELLOW_COLOR "\t[lr]   = learning rate (por defecto: 0.01)\n");
+    fprintf(stdout, "\t[iter] = maximo de iteraciones (por defecto: 1000)\n");
+    fprintf(stdout, "\t[tol]  = tolerancia de convergencia (por defecto: 1e-6)\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "ejemplos:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out -h\n");
-    fprintf(stdout, "\t./build/program.out -knn 3 ./input/iris.csv\n\n" RESET_COLOR);
+    fprintf(stdout, "\t./build/program.out -knn 3 ./data/iris.csv\n");
+    fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv\n");
+    fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv 0.001 2000 1e-8\n\n" RESET_COLOR);
+    fprintf(stdout, BRIGHT_PURPLE_COLOR "nota: para regresion lineal se usa sepal_length como variable objetivo\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 

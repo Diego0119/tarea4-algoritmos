@@ -9,6 +9,7 @@
 #include "config.h"
 #include "csv.h"
 #include "knn.h"
+#include "linear-regression.h"
 
 // Función principal para manejar errores de manera centralizada
 void handle_error(const char *header, const char *detail, const char *file, int line)
@@ -101,4 +102,35 @@ void predict_knn_error(const char *file, int line, Matrix *X_train, Matrix *y_tr
 void k_parameter_error(const char *file, int line)
 {
     handle_error("El valor de k (numero de vecinos) es invalido", "Debe ser un entero positivo e impar", file, line);
+}
+
+// errores especificos de regresion lineal
+void learning_rate_parameter_error(const char *file, int line)
+{
+    handle_error("El valor de learning rate es invalido", "Debe ser un numero positivo mayor que 0", file, line);
+}
+
+void iterations_parameter_error(const char *file, int line)
+{
+    handle_error("El valor de iteraciones es invalido", "Debe ser un entero positivo mayor que 0", file, line);
+}
+
+void create_linear_regression_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test, LinearRegression *lr)
+{
+    linear_regression_free(lr);
+    matrix_free(X_train);
+    matrix_free(y_train);
+    matrix_free(X_test);
+    matrix_free(y_test);
+    handle_error("No se pudo crear el modelo de regresion lineal", "Memoria insuficiente", file, line);
+}
+
+void predict_linear_regression_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test, LinearRegression *lr)
+{
+    linear_regression_free(lr);
+    matrix_free(X_train);
+    matrix_free(y_train);
+    matrix_free(X_test);
+    matrix_free(y_test);
+    handle_error("No se pudieron realizar predicciones con regresion lineal", "Verifique los datos de entrada", file, line);
 }

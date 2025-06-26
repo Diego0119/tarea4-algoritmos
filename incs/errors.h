@@ -11,6 +11,7 @@
 #include "csv.h"
 #include "matrix.h"
 #include "knn.h"
+#include "linear-regression.h"
 
 // Funciones de manejo de errores
 void handle_error(const char *, const char *, const char *, int);
@@ -26,5 +27,9 @@ void train_test_split_error(const char *, int);
 void create_knn_classifier_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, KNNClassifier *);
 void predict_knn_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, KNNClassifier *);
 void k_parameter_error(const char *, int);
+void learning_rate_parameter_error(const char *, int);
+void iterations_parameter_error(const char *, int);
+void create_linear_regression_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, LinearRegression *);
+void predict_linear_regression_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, LinearRegression *);
 
 #endif

@@ -10,6 +10,7 @@
 #include "csv.h"
 #include "utils.h"
 #include "errors.h"
+#include "linear-regression.h"
 
 // Se encarga de procesar los argumentos de la línea de comandos (EN EL FUTURO CAMBIAR POR GETOPT)
 void parse_args(char *argv[])
@@ -37,7 +38,7 @@ void parse_args(char *argv[])
                 if (!csv_data)
                     read_csv_error(__FILE__, __LINE__, filename);
 
-                fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
+                fprintf(stdout, GREEN_COLOR "\ndatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
 
                 print_csv_data(csv_data);
 
@@ -50,6 +51,76 @@ void parse_args(char *argv[])
         }
         else
             argument_error(argv[2], __FILE__, __LINE__);
+    }
+    //regrecion lineal
+    else if (strcmp(argv[1], "-lr") == 0 || strcmp(argv[1], "-linear") == 0)
+    {
+
+        double learning_rate = 0.01;   // learning rate moderado
+        int max_iterations = 2000;     // iteraciones suficientes
+        double tolerance = 1e-7;       // tolerancia razonable
+        const char *filename = NULL;
+        
+        int arg_index = 2;
+        
+        if (argv[arg_index] != NULL)
+        {
+            filename = argv[arg_index];
+            arg_index++;
+
+            const char *extension = strrchr(filename, '.');
+            if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx") != 0))
+                csv_extension_error(__FILE__, __LINE__, filename);
+        }
+        else
+        {
+            printf(CYAN_COLOR "\n╔══════════════════════════════════════════════════════════════╗\n");
+            printf("║                    " BRIGHT_PURPLE_COLOR "REGRESION LINEAL" CYAN_COLOR "                    ║\n");
+            printf("╚══════════════════════════════════════════════════════════════╝\n" RESET_COLOR);
+            printf(YELLOW_COLOR "\nuso:\n" RESET_COLOR);
+            printf("   %s -lr " GREEN_COLOR "<archivo.csv>" RESET_COLOR " [learning_rate] [max_iterations] [tolerance]\n\n", argv[0]);
+            printf(YELLOW_COLOR "ejemplo:\n" RESET_COLOR);
+            printf("   %s -lr " GREEN_COLOR "./data/iris.csv" RESET_COLOR " 0.001 2000 1e-8\n\n", argv[0]);
+            printf(YELLOW_COLOR "parametros por defecto:\n" RESET_COLOR);
+            printf("   • learning_rate = " CYAN_COLOR "0.001" RESET_COLOR "\n");
+            printf("   • max_iterations = " CYAN_COLOR "2000" RESET_COLOR "\n");
+            printf("   • tolerance = " CYAN_COLOR "1e-7" RESET_COLOR "\n\n");
+            exit(EXIT_SUCCESS);
+        }
+
+        if (argv[arg_index] != NULL)
+        {
+            learning_rate = atof(argv[arg_index]);
+            if (learning_rate <= 0.0)
+                learning_rate_parameter_error(__FILE__, __LINE__);
+            arg_index++;
+        }
+        
+        if (argv[arg_index] != NULL)
+        {
+            max_iterations = atoi(argv[arg_index]);
+            if (max_iterations <= 0)
+                iterations_parameter_error(__FILE__, __LINE__);
+            arg_index++;
+        }
+        
+        if (argv[arg_index] != NULL)
+        {
+            tolerance = atof(argv[arg_index]);
+            if (tolerance <= 0.0)
+                tolerance = 1e-6;
+        }
+
+        CSVData *csv_data = load_csv_data(filename, 1, 0, ',');
+        if (!csv_data)
+            read_csv_error(__FILE__, __LINE__, filename);
+
+        fprintf(stdout, GREEN_COLOR "\ndatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
+
+        // ejecutar regresion lineal
+        exec_linear_regression(csv_data, learning_rate, max_iterations, tolerance);
+
+        csv_free(csv_data);
     }
     else
         argument_error(argv[1], __FILE__, __LINE__);
