@@ -30,7 +30,6 @@ void show_help(void)
     fprintf(stdout, "\t./build/program.out -knn 3 ./data/iris.csv\n");
     fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv\n");
     fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv 0.001 2000 1e-8\n\n" RESET_COLOR);
-    fprintf(stdout, BRIGHT_PURPLE_COLOR "nota: para regresion lineal se usa sepal_length como variable objetivo\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 

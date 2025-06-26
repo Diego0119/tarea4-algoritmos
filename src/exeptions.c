@@ -8,12 +8,8 @@
 #include "libs.h"
 #include "config.h"
 #include "csv.h"
-<<<<<<< HEAD
-#include "knn.h"
-#include "linear-regression.h"
-=======
 #include "k-nn.h"
->>>>>>> d662f7a87d45a161eb170265860e0f4d37d722d9
+#include "linear-regression.h"
 
 // Función principal para manejar errores de manera centralizada
 void handle_error(const char *header, const char *detail, const char *file, int line)
