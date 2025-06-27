@@ -20,7 +20,8 @@ void show_help(void)
     fprintf(stdout, YELLOW_COLOR "\t-h, --help\t\tmuestra esta ayuda.\n");
     fprintf(stdout, "\t-v, --version\t\tmuestra la version del programa.\n");
     fprintf(stdout, "\t-knn [k] [archivo]\taplicar algoritmo k-nearest neighbors.\n");
-    fprintf(stdout, "\t-lr, -linear [archivo] [lr] [iter] [tol]\taplicar regresion lineal.\n\n" RESET_COLOR);
+    fprintf(stdout, "\t-lr, -linear [archivo] [lr] [iter] [tol]\taplicar regresion lineal.\n");
+    fprintf(stdout, "\t-km, --kmeans [archivo] [k] [iter] [tol]\taplicar clustering k-means.\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "parametros de regresion lineal:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t[lr]   = learning rate (por defecto: 0.01)\n");
     fprintf(stdout, "\t[iter] = maximo de iteraciones (por defecto: 1000)\n");
@@ -29,7 +30,8 @@ void show_help(void)
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out -h\n");
     fprintf(stdout, "\t./build/program.out -knn 3 ./data/iris.csv\n");
     fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv\n");
-    fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv 0.001 2000 1e-8\n\n" RESET_COLOR);
+    fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv 0.001 2000 1e-8\n");
+    fprintf(stdout, "\t./build/program.out -km ./data/iris.csv 3 100 1e-4\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 
