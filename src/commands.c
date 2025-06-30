@@ -10,7 +10,7 @@
 #include "csv.h"
 #include "utils.h"
 #include "errors.h"
-#include "linear-regression.h"
+#include "lr.h"
 #include "k-means.h"
 
 // Se encarga de procesar los argumentos de la línea de comandos (EN EL FUTURO CAMBIAR POR GETOPT)
@@ -20,7 +20,7 @@ void parse_args(char *argv[])
         show_help();
     else if (strcmp(argv[1], "-v") == 0 || strcmp(argv[1], "--version") == 0)
         show_version();
-    else if (strcmp(argv[1], "-knn") == 0)
+    else if (strcmp(argv[1], "-knn") == 0 || strcmp(argv[1], "--neighboor") == 0)
     {
         if (argv[2] != NULL)
         {
@@ -39,7 +39,7 @@ void parse_args(char *argv[])
                 if (!csv_data)
                     read_csv_error(__FILE__, __LINE__, filename);
 
-                fprintf(stdout, GREEN_COLOR "\ndatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
+                fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
 
                 print_csv_data(csv_data);
 
@@ -54,12 +54,12 @@ void parse_args(char *argv[])
             argument_error(argv[2], __FILE__, __LINE__);
     }
     // regrecion lineal
-    else if (strcmp(argv[1], "-lr") == 0 || strcmp(argv[1], "-linear") == 0)
+    else if (strcmp(argv[1], "-lr") == 0 || strcmp(argv[1], "--linear") == 0)
     {
 
-        double learning_rate = 0.01; // learning rate moderado
-        int max_iterations = 2000;   // iteraciones suficientes
-        double tolerance = 1e-7;     // tolerancia razonable
+        double learning_rate = 0.01; // Learning rate moderado
+        int max_iterations = 2000;   // Iteraciones suficientes
+        double tolerance = 1e-7;     // Tolerancia razonable
         const char *filename = NULL;
 
         int arg_index = 2;
@@ -116,9 +116,8 @@ void parse_args(char *argv[])
         if (!csv_data)
             read_csv_error(__FILE__, __LINE__, filename);
 
-        fprintf(stdout, GREEN_COLOR "\ndatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
+        fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
 
-        // ejecutar regresion lineal
         exec_linear_regression(csv_data, learning_rate, max_iterations, tolerance);
 
         csv_free(csv_data);

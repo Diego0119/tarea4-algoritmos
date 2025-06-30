@@ -6,7 +6,7 @@
  */
 
 #include "libs.h"
-#include "linear-regression.h"
+#include "lr.h"
 #include "config.h"
 #include "csv.h"
 #include "errors.h"
@@ -24,11 +24,13 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
     // normalizar las caracteristicas para mejorar la convergencia
     double *means = (double *)calloc(X_train->cols, sizeof(double));
     double *stds = (double *)calloc(X_train->cols, sizeof(double));
-    
+
     if (!means || !stds)
     {
-        if (means) free(means);
-        if (stds) free(stds);
+        if (means)
+            free(means);
+        if (stds)
+            free(stds);
         matrix_free(X_train);
         matrix_free(y_train);
         matrix_free(X_test);
@@ -42,11 +44,11 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
         for (int i = 0; i < X_train->rows; i++)
             means[j] += X_train->data[i][j];
         means[j] /= X_train->rows;
-        
+
         for (int i = 0; i < X_train->rows; i++)
             stds[j] += (X_train->data[i][j] - means[j]) * (X_train->data[i][j] - means[j]);
         stds[j] = sqrt(stds[j] / X_train->rows);
-        
+
         // evitar division por cero
         if (stds[j] < 1e-8)
             stds[j] = 1.0;
@@ -92,7 +94,7 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
         }
         fprintf(stdout, "\n");
     }
-    
+
     fprintf(stdout, "intercepto: %.4f\n", lr->bias);
     fprintf(stdout, "error cuadratico medio: %.4f\n", test_mse);
     fprintf(stdout, "coeficiente r²: %.4f\n", test_r2);
@@ -126,7 +128,7 @@ LinearRegression *linear_regression_create(int n_features, double learning_rate,
 
     // inicializar pesos con inicializacion xavier/glorot para mejor convergencia
     double limit = sqrt(6.0 / (n_features + 1)); // xavier initialization
-    //xavier o glorot initialization = inicializar peso de una red
+    // xavier o glorot initialization = inicializar peso de una red
     for (int i = 0; i < n_features; i++)
         lr->weights->data[i][0] = ((double)rand() / RAND_MAX - 0.5) * 2.0 * limit;
 
@@ -278,7 +280,7 @@ double linear_regression_r2_score(Matrix *y_true, Matrix *y_pred)
     {
         double y_val = y_true->data[i][0];
         double y_pred_val = y_pred->data[i][0];
-        
+
         ss_tot += (y_val - mean_y) * (y_val - mean_y);
         ss_res += (y_val - y_pred_val) * (y_val - y_pred_val);
     }
@@ -297,7 +299,7 @@ void gradient_descent_step(LinearRegression *lr, Matrix *X, Matrix *y, Matrix *p
         return;
 
     int m = X->rows; // numero de muestras
-    
+
     // calcular errores: error = predictions - y
     Matrix *errors = matrix_subtract(predictions, y);
     if (!errors)
@@ -329,7 +331,7 @@ void gradient_descent_step(LinearRegression *lr, Matrix *X, Matrix *y, Matrix *p
     double bias_gradient = 0.0;
     for (int i = 0; i < errors->rows; i++)
         bias_gradient += errors->data[i][0];
-    
+
     // actualizar bias
     lr->bias -= lr->learning_rate * (bias_gradient / m);
 
@@ -349,7 +351,7 @@ void regression_metrics_free(RegressionMetrics *metrics)
         free(metrics->mse_history);
     if (metrics->cost_history)
         free(metrics->cost_history);
-    
+
     free(metrics);
 }
 
@@ -377,7 +379,7 @@ void normalize_features_with_stats(Matrix *X, double *means, double *stds, int c
                 std += diff * diff;
             }
             std = sqrt(std / X->rows);
-            
+
             // evitar division por cero
             if (std < 1e-8)
                 std = 1.0;
@@ -392,5 +394,3 @@ void normalize_features_with_stats(Matrix *X, double *means, double *stds, int c
             X->data[i][j] = (X->data[i][j] - means[j]) / stds[j];
     }
 }
-
-

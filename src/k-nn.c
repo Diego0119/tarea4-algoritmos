@@ -53,6 +53,10 @@ void exec_knn(CSVData *csv_data, int k)
 
     fprintf(stdout, GREEN_COLOR "\nPrecisión del modelo KNN (k=%d, Euclidiana): %.4f\n\n" RESET_COLOR, k, precision_euclidean);
 
+    // Mostrar matriz de confusión para distancia euclidiana
+    fprintf(stdout, CYAN_COLOR "Matriz de Confusión (Euclidiana):\n\n" RESET_COLOR);
+    print_confusion_matrix(y_test, y_pred_eucledian, "Euclidiana");
+
     fprintf(stdout, CYAN_COLOR "Usando Métrica de Distancia Manhattan\n\n" RESET_COLOR);
 
     // Realizar predicciones con distancia Manhattan
@@ -73,6 +77,10 @@ void exec_knn(CSVData *csv_data, int k)
         fprintf(stdout, "Real: %.0f, Predicción: %.0f\n", y_test->data[i][0], y_pred_manhattan->data[i][0]);
 
     fprintf(stdout, GREEN_COLOR "\nPrecisión del modelo KNN (k=%d, Manhattan): %.4f\n\n" RESET_COLOR, k, precision_manhattan);
+
+    // Mostrar matriz de confusión para distancia manhattan
+    fprintf(stdout, CYAN_COLOR "Matriz de Confusión (Manhattan):\n\n" RESET_COLOR);
+    print_confusion_matrix(y_test, y_pred_manhattan, "Manhattan");
 
     matrix_free(y_pred_eucledian);
     matrix_free(y_pred_manhattan);
@@ -265,4 +273,122 @@ double manhattan_distance(const double *x1, const double *x2, int n)
     }
 
     return sum; // Devolver la suma de las diferencias absolutas
+}
+
+// Función para calcular y mostrar la matriz de confusión
+void print_confusion_matrix(Matrix *y_true, Matrix *y_pred, const char *method_name)
+{
+    if (!y_true || !y_pred || y_true->rows != y_pred->rows)
+        return;
+
+    double classes[MAX_CLASSES];
+    int num_classes = 0;
+
+    // Buscar clases únicas en las etiquetas verdaderas
+    for (int i = 0; i < y_true->rows; i++)
+    {
+        double current_class = y_true->data[i][0];
+        int found = 0;
+
+        for (int j = 0; j < num_classes; j++)
+        {
+            if (classes[j] == current_class)
+            {
+                found = 1;
+                break;
+            }
+        }
+
+        if (!found && num_classes < MAX_CLASSES)
+        {
+            classes[num_classes] = current_class;
+            num_classes++;
+        }
+    }
+
+    // Ordenar las clases con Bubble Sort
+    for (int i = 0; i < num_classes - 1; i++)
+        for (int j = i + 1; j < num_classes; j++)
+            if (classes[i] > classes[j]) // Si la clase i es mayor que la clase j
+            {
+                double temp = classes[i];
+                classes[i] = classes[j]; // Intercambiar clases
+                classes[j] = temp;
+            }
+
+    // Crear matriz de confusión
+    int confusion_matrix[MAX_CLASSES][MAX_CLASSES];
+    for (int i = 0; i < num_classes; i++)
+        for (int j = 0; j < num_classes; j++)
+            confusion_matrix[i][j] = 0;
+
+    // Llenar la matriz de confusión
+    for (int i = 0; i < y_true->rows; i++)
+    {
+        int true_idx = -1, pred_idx = -1;
+
+        // Encontrar índice de la clase verdadera
+        for (int j = 0; j < num_classes; j++)
+            if (classes[j] == y_true->data[i][0])
+            {
+                true_idx = j;
+                break;
+            }
+
+        // Encontrar índice de la clase predicha
+        for (int j = 0; j < num_classes; j++)
+            if (classes[j] == y_pred->data[i][0])
+            {
+                pred_idx = j;
+                break;
+            }
+
+        if (true_idx >= 0 && pred_idx >= 0)
+            confusion_matrix[true_idx][pred_idx]++;
+    }
+
+    fprintf(stdout, "         ");
+    for (int i = 0; i < num_classes; i++)
+        fprintf(stdout, "Pred %.0f  ", classes[i]);
+    fprintf(stdout, "\n");
+
+    for (int i = 0; i < num_classes; i++)
+    {
+        fprintf(stdout, "Real %.0f | ", classes[i]);
+        for (int j = 0; j < num_classes; j++)
+        {
+            if (i == j) // Diagonal principal (predicciones correctas)
+                fprintf(stdout, GREEN_COLOR "%6d" RESET_COLOR "  ", confusion_matrix[i][j]);
+            else // Predicciones incorrectas
+                fprintf(stdout, RED_COLOR "%6d" RESET_COLOR "  ", confusion_matrix[i][j]);
+        }
+        fprintf(stdout, "\n");
+    }
+
+    fprintf(stdout, "\n");
+
+    for (int i = 0; i < num_classes; i++)
+    {
+        int tp = confusion_matrix[i][i]; // Verdaderos positivos
+        int fp = 0, fn = 0;              // Falsos positivos y falsos negativos
+
+        // Calcular falsos positivos (columna i, excluyendo diagonal)
+        for (int j = 0; j < num_classes; j++)
+            if (j != i)
+                fp += confusion_matrix[j][i];
+
+        // Calcular falsos negativos (fila i, excluyendo diagonal)
+        for (int j = 0; j < num_classes; j++)
+            if (j != i)
+                fn += confusion_matrix[i][j];
+
+        // Calcular precisión y recall
+        double precision = (tp + fp) > 0 ? (double)tp / (tp + fp) : 0.0;
+        double recall = (tp + fn) > 0 ? (double)tp / (tp + fn) : 0.0;
+        double f1_score = (precision + recall) > 0 ? 2 * (precision * recall) / (precision + recall) : 0.0;
+
+        fprintf(stdout, "Clase %.0f: Precision: %.4f, Recall: %.4f, F1-Score: %.4f\n", classes[i], precision, recall, f1_score);
+    }
+
+    fprintf(stdout, "\n");
 }
