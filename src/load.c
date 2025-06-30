@@ -282,8 +282,10 @@ int train_valid_test_split(Matrix *data, Matrix *labels, double valid_ratio, dou
     {
         if (*X_train)
             matrix_free(*X_train);
+
         if (*X_valid)
             matrix_free(*X_valid);
+
         if (*X_test)
             matrix_free(*X_test);
         return 0;
@@ -299,13 +301,17 @@ int train_valid_test_split(Matrix *data, Matrix *labels, double valid_ratio, dou
         {
             if (*y_train)
                 matrix_free(*y_train);
+
             if (*y_valid)
                 matrix_free(*y_valid);
+
             if (*y_test)
                 matrix_free(*y_test);
+
             matrix_free(*X_train);
             matrix_free(*X_valid);
             matrix_free(*X_test);
+
             return 0;
         }
     }
@@ -322,20 +328,23 @@ int train_valid_test_split(Matrix *data, Matrix *labels, double valid_ratio, dou
         matrix_free(*X_train);
         matrix_free(*X_valid);
         matrix_free(*X_test);
+
         if (*y_train)
             matrix_free(*y_train);
+
         if (*y_valid)
             matrix_free(*y_valid);
+
         if (*y_test)
             matrix_free(*y_test);
+
         return 0;
     }
 
     for (int i = 0; i < n_samples; i++)
         index[i] = i;
 
-    // Mezclar los índices (Fisher-Yates shuffle)
-    for (int i = n_samples - 1; i > 0; i--)
+    for (int i = n_samples - 1; i > 0; i--) // Mezclar los índices (Fisher-Yates shuffle)
     {
         int j = rand() % (i + 1);
         int temp = index[i];
@@ -343,35 +352,41 @@ int train_valid_test_split(Matrix *data, Matrix *labels, double valid_ratio, dou
         index[j] = temp;
     }
 
-    // Llenar conjuntos de entrenamiento
-    for (int i = 0; i < train_size; i++)
+    for (int i = 0; i < train_size; i++) // Llenar conjuntos de entrenamiento
     {
         int idx = index[i];
+
         for (int j = 0; j < n_features; j++)
             (*X_train)->data[i][j] = data->data[idx][j];
+
         if (labels && *y_train)
             (*y_train)->data[i][0] = labels->data[idx][0];
     }
-    // Llenar conjuntos de validación
-    for (int i = 0; i < valid_size; i++)
+
+    for (int i = 0; i < valid_size; i++) // Llenar conjuntos de validación
     {
         int idx = index[train_size + i];
+
         for (int j = 0; j < n_features; j++)
             (*X_valid)->data[i][j] = data->data[idx][j];
+
         if (labels && *y_valid)
             (*y_valid)->data[i][0] = labels->data[idx][0];
     }
-    // Llenar conjuntos de prueba
-    for (int i = 0; i < test_size; i++)
+
+    for (int i = 0; i < test_size; i++) // Llenar conjuntos de prueba
     {
         int idx = index[train_size + valid_size + i];
+
         for (int j = 0; j < n_features; j++)
             (*X_test)->data[i][j] = data->data[idx][j];
+
         if (labels && *y_test)
             (*y_test)->data[i][0] = labels->data[idx][0];
     }
 
     free(index);
+
     return 1;
 }
 

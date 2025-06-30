@@ -91,6 +91,8 @@ void exec_knn(CSVData *csv_data, int k)
     matrix_free(y_pred_manhattan);
     matrix_free(X_train);
     matrix_free(y_train);
+    matrix_free(X_valid);
+    matrix_free(y_valid);
     matrix_free(X_test);
     matrix_free(y_test);
     knn_free(knn);
