@@ -55,7 +55,7 @@ void exec_knn(CSVData *csv_data, int k)
 
     // Mostrar matriz de confusión para distancia euclidiana
     fprintf(stdout, CYAN_COLOR "Matriz de Confusión (Euclidiana):\n\n" RESET_COLOR);
-    print_confusion_matrix(y_test, y_pred_eucledian, "Euclidiana");
+    print_confusion_matrix(y_test, y_pred_eucledian);
 
     fprintf(stdout, CYAN_COLOR "Usando Métrica de Distancia Manhattan\n\n" RESET_COLOR);
 
@@ -80,7 +80,11 @@ void exec_knn(CSVData *csv_data, int k)
 
     // Mostrar matriz de confusión para distancia manhattan
     fprintf(stdout, CYAN_COLOR "Matriz de Confusión (Manhattan):\n\n" RESET_COLOR);
-    print_confusion_matrix(y_test, y_pred_manhattan, "Manhattan");
+    print_confusion_matrix(y_test, y_pred_manhattan);
+
+    export_results_knn_to_csv(y_test, y_pred_eucledian, k, "Euclidiana", "stats/resultados_knn_euclidiana.csv");
+    export_results_knn_to_csv(y_test, y_pred_manhattan, k, "Manhattan", "stats/resultados_knn_manhattan.csv");
+    fprintf(stdout, GREEN_COLOR "Resultados exportados a la carpeta stats.\n\n" RESET_COLOR);
 
     matrix_free(y_pred_eucledian);
     matrix_free(y_pred_manhattan);
@@ -276,7 +280,7 @@ double manhattan_distance(const double *x1, const double *x2, int n)
 }
 
 // Función para calcular y mostrar la matriz de confusión
-void print_confusion_matrix(Matrix *y_true, Matrix *y_pred, const char *method_name)
+void print_confusion_matrix(Matrix *y_true, Matrix *y_pred)
 {
     if (!y_true || !y_pred || y_true->rows != y_pred->rows)
         return;
@@ -391,4 +395,107 @@ void print_confusion_matrix(Matrix *y_true, Matrix *y_pred, const char *method_n
     }
 
     fprintf(stdout, "\n");
+}
+
+// Función para exportar resultados de KNN a un archivo CSV
+void export_results_knn_to_csv(Matrix *y_true, Matrix *y_pred, int k, const char *method_name, const char *filename)
+{
+    if (!y_true || !y_pred || y_true->rows != y_pred->rows)
+        return;
+
+    FILE *file = fopen(filename, "w");
+    if (!file)
+        open_file_error(__FILE__, __LINE__, filename);
+
+    double classes[MAX_CLASSES];
+    int num_classes = 0;
+
+    for (int i = 0; i < y_true->rows; i++)
+    {
+        double current_class = y_true->data[i][0];
+        int found = 0;
+        for (int j = 0; j < num_classes; j++)
+            if (classes[j] == current_class)
+            {
+                found = 1;
+                break;
+            }
+        if (!found && num_classes < 10)
+        {
+            classes[num_classes] = current_class;
+            num_classes++;
+        }
+    }
+
+    // Ordenar clases
+    for (int i = 0; i < num_classes - 1; i++)
+        for (int j = i + 1; j < num_classes; j++)
+            if (classes[i] > classes[j])
+            {
+                double temp = classes[i];
+                classes[i] = classes[j];
+                classes[j] = temp;
+            }
+
+    // Matriz de confusión
+    int confusion_matrix[10][10] = {0};
+    for (int i = 0; i < y_true->rows; i++)
+    {
+        int true_idx = -1, pred_idx = -1;
+        for (int j = 0; j < num_classes; j++)
+        {
+            if (classes[j] == y_true->data[i][0])
+                true_idx = j;
+            if (classes[j] == y_pred->data[i][0])
+                pred_idx = j;
+        }
+        if (true_idx >= 0 && pred_idx >= 0)
+            confusion_matrix[true_idx][pred_idx]++;
+    }
+
+    // Escribir encabezados en el archivo CSV
+    fprintf(file, "Metodo,K,Clases\n");
+    fprintf(file, "%s,%d,", method_name, k);
+    for (int i = 0; i < num_classes; i++)
+        fprintf(file, "%.0f%s", classes[i], (i < num_classes - 1) ? ";" : "\n");
+
+    // Métricas por clase
+    fprintf(file, "Clase,Precision,Recall,F1-Score\n");
+    for (int i = 0; i < num_classes; i++)
+    {
+        int tp = confusion_matrix[i][i]; // Verdaderos positivos
+        int fp = 0, fn = 0;              // Falsos positivos y falsos negativos
+
+        for (int j = 0; j < num_classes; j++) // Calcular falsos positivos (columna i, excluyendo diagonal)
+            if (j != i)
+                fp += confusion_matrix[j][i];
+
+        // Calcular falsos negativos (fila i, excluyendo diagonal)
+        for (int j = 0; j < num_classes; j++)
+            if (j != i)
+                fn += confusion_matrix[i][j];
+
+        double precision = (tp + fp) > 0 ? (double)tp / (tp + fp) : 0.0;
+        double recall = (tp + fn) > 0 ? (double)tp / (tp + fn) : 0.0;
+        double f1_score = (precision + recall) > 0 ? 2 * (precision * recall) / (precision + recall) : 0.0;
+
+        fprintf(file, "%.0f,%.4f,%.4f,%.4f\n", classes[i], precision, recall, f1_score);
+    }
+
+    // Matriz de confusión
+    fprintf(file, "\nMatriz de Confusion\n");
+    fprintf(file, "Real/Pred");
+    for (int i = 0; i < num_classes; i++)
+        fprintf(file, ",%.0f", classes[i]);
+    fprintf(file, "\n");
+
+    for (int i = 0; i < num_classes; i++)
+    {
+        fprintf(file, "%.0f", classes[i]);
+        for (int j = 0; j < num_classes; j++)
+            fprintf(file, ",%d", confusion_matrix[i][j]);
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
 }

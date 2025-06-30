@@ -1,0 +1,12 @@
+Metodo,K,Clases
+Euclidiana,3,0;1;2
+Clase,Precision,Recall,F1-Score
+0,1.0000,1.0000,1.0000
+1,1.0000,1.0000,1.0000
+2,1.0000,1.0000,1.0000
+
+Matriz de Confusion
+Real/Pred,0,1,2
+0,8,0,0
+1,0,11,0
+2,0,0,11

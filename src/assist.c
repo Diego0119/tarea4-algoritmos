@@ -52,7 +52,7 @@ void show_version(void)
 // Imprime los datos al cargar el DF a la estructura CSVData
 void print_csv_data(CSVData *csv_data)
 {
-    fprintf(stdout, "\nDimensiones de los datos: %d filas x %d columnas\n", csv_data->data->rows, csv_data->data->cols);
+    fprintf(stdout, GREEN_COLOR "\nDimensiones de los datos: %d filas x %d columnas\n", csv_data->data->rows, csv_data->data->cols);
 
     if (csv_data->has_header && csv_data->header)
     {
@@ -61,7 +61,7 @@ void print_csv_data(CSVData *csv_data)
         for (int i = 0; i < csv_data->data->cols; i++)
             fprintf(stdout, "%s ", csv_data->header[i]);
 
-        fprintf(stdout, "%s (etiqueta)\n", csv_data->header[csv_data->label_col]);
+        fprintf(stdout, "%s (etiqueta)\n" RESET_COLOR, csv_data->header[csv_data->label_col]);
     }
 
     fprintf(stdout, YELLOW_COLOR "\nPrimeras 5 muestras:\n\n" RESET_COLOR);
