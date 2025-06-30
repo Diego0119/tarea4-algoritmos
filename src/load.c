@@ -142,12 +142,20 @@ CSVData *load_csv_data(const char *filename, int has_header, int label_col, char
         {
             if (col == label_col) // Esta columna contiene etiquetas
             {
-                if (csv_data->labels)
-                    csv_data->labels->data[row][0] = atof(fields[col]);
+                if (csv_data->labels) // Si hay etiquetas, almacenar el valor
+                {
+                    if (fields[col][0] == '\0')
+                        csv_data->labels->data[row][0] = NAN; // Valor faltante
+                    else
+                        csv_data->labels->data[row][0] = atof(fields[col]); // Convertir a número
+                }
             }
             else // Esta columna contiene datos
             {
-                csv_data->data->data[row][data_col] = atof(fields[col]);
+                if (fields[col][0] == '\0')
+                    csv_data->data->data[row][data_col] = NAN; // Valor faltante
+                else
+                    csv_data->data->data[row][data_col] = atof(fields[col]); // Convertir a número
                 data_col++;
             }
         }
@@ -156,6 +164,8 @@ CSVData *load_csv_data(const char *filename, int has_header, int label_col, char
     }
 
     fclose(file);
+
+    normalize_csv_data(csv_data->data);
 
     return csv_data;
 }
@@ -348,4 +358,91 @@ int train_test_split(Matrix *data, Matrix *labels, double test_ratio, Matrix **X
     free(index);
 
     return 1;
+}
+
+// Función para normalizar los datos de un CSV (detecta espacios y completa datos faltantes) utilizando Min-Max Scaling
+void normalize_csv_data(Matrix *data)
+{
+    if (!data)
+        return;
+
+    int rows = data->rows;
+    int cols = data->cols;
+
+    double *min = (double *)malloc(cols * sizeof(double));
+    double *max = (double *)malloc(cols * sizeof(double));
+    double *mean = (double *)malloc(cols * sizeof(double));
+    int *count = (int *)malloc(cols * sizeof(int));
+    if (!min || !max || !mean || !count)
+        return;
+
+    for (int j = 0; j < cols; j++) // Inicializar
+    {
+        min[j] = DBL_MAX;
+        max[j] = -DBL_MAX;
+        mean[j] = 0.0;
+        count[j] = 0;
+    }
+
+    for (int j = 0; j < cols; j++) // Calcular media ignorando NAN
+    {
+        for (int i = 0; i < rows; i++)
+        {
+            double v = data->data[i][j];
+
+            if (!isnan(v)) // Verificar si el valor no es NAN
+            {
+                mean[j] += v;
+                count[j]++;
+
+                if (v < min[j]) // Actualizar mínimo
+                    min[j] = v;
+
+                if (v > max[j]) // Actualizar máximo
+                    max[j] = v;
+            }
+        }
+
+        if (count[j] > 0) // Calcular la media
+            mean[j] /= count[j];
+        else
+            mean[j] = 0.0;
+    }
+
+    for (int j = 0; j < cols; j++) // Imputar NAN con la media
+        for (int i = 0; i < rows; i++)
+            if (isnan(data->data[i][j]))
+                data->data[i][j] = mean[j];
+
+    for (int j = 0; j < cols; j++) // Recalcular min y max tras imputación
+    {
+        min[j] = DBL_MAX;
+        max[j] = -DBL_MAX;
+        for (int i = 0; i < rows; i++)
+        {
+            double v = data->data[i][j];
+
+            if (v < min[j]) // Actualizar mínimo
+                min[j] = v;
+
+            if (v > max[j]) // Actualizar máximo
+                max[j] = v;
+        }
+    }
+
+    for (int j = 0; j < cols; j++) // Normalizar Min-Max
+    {
+        double range = max[j] - min[j];
+
+        if (range == 0)
+            range = 1.0;
+
+        for (int i = 0; i < rows; i++)
+            data->data[i][j] = (data->data[i][j] - min[j]) / range;
+    }
+
+    free(min);
+    free(max);
+    free(mean);
+    free(count);
 }

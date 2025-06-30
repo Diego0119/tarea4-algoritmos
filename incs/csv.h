@@ -26,5 +26,6 @@ char *my_strdup(const char *);
 void csv_free(CSVData *);
 int train_test_split(Matrix *, Matrix *, double, Matrix **, Matrix **, Matrix **, Matrix **);
 void print_csv_data(CSVData *);
+void normalize_csv_data(Matrix *);
 
 #endif

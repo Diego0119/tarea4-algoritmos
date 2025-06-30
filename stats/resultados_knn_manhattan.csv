@@ -1,12 +1,10 @@
 Metodo,K,Clases
-Manhattan,3,0;1;2
+Manhattan,3,0;1
 Clase,Precision,Recall,F1-Score
-0,1.0000,1.0000,1.0000
-1,1.0000,1.0000,1.0000
-2,1.0000,1.0000,1.0000
+0,0.9231,1.0000,0.9600
+1,1.0000,0.8750,0.9333
 
 Matriz de Confusion
-Real/Pred,0,1,2
-0,8,0,0
-1,0,11,0
-2,0,0,11
+Real/Pred,0,1
+0,12,0
+1,1,7
