@@ -14,15 +14,16 @@
 // Aplicar algoritmo K-Vecinos Más Cercanos (KNN) al conjunto de datos Iris
 void exec_knn(CSVData *csv_data, int k)
 {
-    fprintf(stdout, CYAN_COLOR "K-Vecinos Más Cercanos (KNN)\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "K-Vecinos Mas Cercanos (KNN)\n\n" RESET_COLOR);
 
-    // Dividir en conjuntos de entrenamiento y prueba (80% entrenamiento, 20% prueba)
-    Matrix *X_train, *y_train, *X_test, *y_test;
-    if (!train_test_split(csv_data->data, csv_data->labels, 0.2, &X_train, &y_train, &X_test, &y_test))
-        train_test_split_error(__FILE__, __LINE__);
+    // Dividir en conjuntos de entrenamiento, validación y prueba (60% entrenamiento, 20% validación y 20% prueba)
+    Matrix *X_train, *y_train, *X_valid, *y_valid, *X_test, *y_test;
+    if (!train_valid_test_split(csv_data->data, csv_data->labels, 0.2, 0.2, &X_train, &y_train, &X_valid, &y_valid, &X_test, &y_test))
+        train_valid_test_split_error(__FILE__, __LINE__);
 
-    fprintf(stdout, "Conjunto de entrenamiento: %d muestras x %d características\n", X_train->rows, X_train->cols);
-    fprintf(stdout, "Conjunto de prueba: %d muestras x %d características\n", X_test->rows, X_test->cols);
+    fprintf(stdout, "Conjunto de entrenamiento: %d muestras x %d caracteristicas\n", X_train->rows, X_train->cols);
+    fprintf(stdout, "Conjunto de validacion: %d muestras x %d caracteristicas\n", X_valid->rows, X_valid->cols);
+    fprintf(stdout, "Conjunto de prueba: %d muestras x %d caracteristicas\n", X_test->rows, X_test->cols);
 
     // Crear y entrenar el modelo KNN
     KNNClassifier *knn = knn_create(k);
@@ -32,7 +33,7 @@ void exec_knn(CSVData *csv_data, int k)
     // Entrenar el modelo (knn_fit es void, no devuelve valor)
     knn_fit(knn, X_train, y_train);
 
-    fprintf(stdout, CYAN_COLOR "\nUsando Métrica de Distancia Euclidiana\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "\nUsando Metrica de Distancia Euclidiana\n\n" RESET_COLOR);
 
     // Realizar predicciones con distancia Euclidiana
     Matrix *y_pred_eucledian = knn_predict(knn, X_test, 0); // 0 para usar distancia euclidiana
@@ -49,15 +50,15 @@ void exec_knn(CSVData *csv_data, int k)
 
     fprintf(stdout, YELLOW_COLOR "Primeras 5 predicciones:\n\n" RESET_COLOR);
     for (int i = 0; i < 5 && i < y_test->rows; i++)
-        fprintf(stdout, "Real: %.0f, Predicción: %.0f\n", y_test->data[i][0], y_pred_eucledian->data[i][0]);
+        fprintf(stdout, "Real: %.0f, Prediccion: %.0f\n", y_test->data[i][0], y_pred_eucledian->data[i][0]);
 
-    fprintf(stdout, GREEN_COLOR "\nPrecisión del modelo KNN (k=%d, Euclidiana): %.4f\n\n" RESET_COLOR, k, precision_euclidean);
+    fprintf(stdout, GREEN_COLOR "\nPrecision del modelo KNN (k=%d, Euclidiana): %.4f\n\n" RESET_COLOR, k, precision_euclidean);
 
     // Mostrar matriz de confusión para distancia euclidiana
-    fprintf(stdout, CYAN_COLOR "Matriz de Confusión (Euclidiana):\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "Matriz de Confusion (Euclidiana):\n\n" RESET_COLOR);
     print_confusion_matrix(y_test, y_pred_eucledian);
 
-    fprintf(stdout, CYAN_COLOR "Usando Métrica de Distancia Manhattan\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "Usando Metrica de Distancia Manhattan\n\n" RESET_COLOR);
 
     // Realizar predicciones con distancia Manhattan
     Matrix *y_pred_manhattan = knn_predict(knn, X_test, 1); // 1 para usar distancia Manhattan
@@ -74,12 +75,12 @@ void exec_knn(CSVData *csv_data, int k)
 
     fprintf(stdout, YELLOW_COLOR "Primeras 5 predicciones:\n\n" RESET_COLOR);
     for (int i = 0; i < 5 && i < y_test->rows; i++)
-        fprintf(stdout, "Real: %.0f, Predicción: %.0f\n", y_test->data[i][0], y_pred_manhattan->data[i][0]);
+        fprintf(stdout, "Real: %.0f, Prediccion: %.0f\n", y_test->data[i][0], y_pred_manhattan->data[i][0]);
 
-    fprintf(stdout, GREEN_COLOR "\nPrecisión del modelo KNN (k=%d, Manhattan): %.4f\n\n" RESET_COLOR, k, precision_manhattan);
+    fprintf(stdout, GREEN_COLOR "\nPrecision del modelo KNN (k=%d, Manhattan): %.4f\n\n" RESET_COLOR, k, precision_manhattan);
 
     // Mostrar matriz de confusión para distancia manhattan
-    fprintf(stdout, CYAN_COLOR "Matriz de Confusión (Manhattan):\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "Matriz de Confusion (Manhattan):\n\n" RESET_COLOR);
     print_confusion_matrix(y_test, y_pred_manhattan);
 
     export_results_knn_to_csv(y_test, y_pred_eucledian, k, "Euclidiana", "stats/resultados_knn_euclidiana.csv");

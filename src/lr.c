@@ -16,10 +16,12 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
 {
     fprintf(stdout, CYAN_COLOR "=== regresion lineal ===\n" RESET_COLOR);
 
-    // dividir en conjuntos de entrenamiento y prueba (80% entrenamiento, 20% prueba)
-    Matrix *X_train, *y_train, *X_test, *y_test;
-    if (!train_test_split(csv_data->data, csv_data->labels, 0.2, &X_train, &y_train, &X_test, &y_test))
-        train_test_split_error(__FILE__, __LINE__);
+    // dividir en conjuntos de entrenamiento y prueba (60% entrenamiento, 20% validación?? y 20% prueba)
+    Matrix *X_train, *y_train, *X_valid, *y_valid, *X_test, *y_test;
+    double test_ratio = 0.2;
+    double valid_ratio = 0.2; // No sé si se usa en la regresión lineal
+    if (!train_valid_test_split(csv_data->data, csv_data->labels, valid_ratio, test_ratio, &X_train, &y_train, &X_valid, &y_valid, &X_test, &y_test))
+        train_valid_test_split_error(__FILE__, __LINE__);
 
     // normalizar las caracteristicas para mejorar la convergencia
     double *means = (double *)calloc(X_train->cols, sizeof(double));

@@ -258,65 +258,74 @@ void csv_free(CSVData *csv_data)
     free(csv_data);
 }
 
-// Función para dividir un conjunto de datos en conjuntos de entrenamiento y prueba
-int train_test_split(Matrix *data, Matrix *labels, double test_ratio, Matrix **X_train, Matrix **y_train, Matrix **X_test, Matrix **y_test)
+// Función para dividir un conjunto de datos en conjuntos de entrenamiento, validación y prueba
+int train_valid_test_split(Matrix *data, Matrix *labels, double valid_ratio, double test_ratio, Matrix **X_train, Matrix **y_train, Matrix **X_valid, Matrix **y_valid, Matrix **X_test, Matrix **y_test)
 {
-    if (!data || test_ratio < 0.0 || test_ratio > 1.0)
+    if (!data || valid_ratio < 0.0 || valid_ratio > 1.0 || test_ratio < 0.0 || test_ratio > 1.0 || (valid_ratio + test_ratio) >= 1.0)
         return 0;
 
     int n_samples = data->rows;
     int n_features = data->cols;
 
-    // Calcular tamaños de conjuntos de entrenamiento y prueba
+    // Calcular tamaños de conjuntos de entrenamiento, validación y prueba
     int test_size = (int)(test_ratio * n_samples);
-    int train_size = n_samples - test_size;
-    if (train_size <= 0 || test_size <= 0)
+    int valid_size = (int)(valid_ratio * n_samples);
+    int train_size = n_samples - test_size - valid_size;
+    if (train_size <= 0 || test_size <= 0 || valid_size <= 0)
         return 0;
 
-    // Crear matrices para los conjuntos de entrenamiento y prueba
     *X_train = matrix_create(train_size, n_features);
+    *X_valid = matrix_create(valid_size, n_features);
     *X_test = matrix_create(test_size, n_features);
 
-    if (!*X_train || !*X_test)
+    if (!*X_train || !*X_valid || !*X_test)
     {
         if (*X_train)
             matrix_free(*X_train);
+        if (*X_valid)
+            matrix_free(*X_valid);
         if (*X_test)
             matrix_free(*X_test);
         return 0;
     }
 
-    // Si hay etiquetas, crear matrices para ellas también
     if (labels)
     {
         *y_train = matrix_create(train_size, 1);
+        *y_valid = matrix_create(valid_size, 1);
         *y_test = matrix_create(test_size, 1);
 
-        if (!*y_train || !*y_test)
+        if (!*y_train || !*y_valid || !*y_test)
         {
-            matrix_free(*X_train);
-            matrix_free(*X_test);
             if (*y_train)
                 matrix_free(*y_train);
+            if (*y_valid)
+                matrix_free(*y_valid);
             if (*y_test)
                 matrix_free(*y_test);
+            matrix_free(*X_train);
+            matrix_free(*X_valid);
+            matrix_free(*X_test);
             return 0;
         }
     }
     else
     {
         *y_train = NULL;
+        *y_valid = NULL;
         *y_test = NULL;
     }
 
-    // Crear un arreglo de índices y mezclarlo aleatoriamente
     int *index = (int *)malloc(n_samples * sizeof(int));
     if (!index)
     {
         matrix_free(*X_train);
+        matrix_free(*X_valid);
         matrix_free(*X_test);
         if (*y_train)
             matrix_free(*y_train);
+        if (*y_valid)
+            matrix_free(*y_valid);
         if (*y_test)
             matrix_free(*y_test);
         return 0;
@@ -334,29 +343,35 @@ int train_test_split(Matrix *data, Matrix *labels, double test_ratio, Matrix **X
         index[j] = temp;
     }
 
-    // Llenar conjuntos de entrenamiento y prueba
+    // Llenar conjuntos de entrenamiento
     for (int i = 0; i < train_size; i++)
     {
         int idx = index[i];
         for (int j = 0; j < n_features; j++)
             (*X_train)->data[i][j] = data->data[idx][j];
-
         if (labels && *y_train)
             (*y_train)->data[i][0] = labels->data[idx][0];
     }
-
-    for (int i = 0; i < test_size; i++)
+    // Llenar conjuntos de validación
+    for (int i = 0; i < valid_size; i++)
     {
         int idx = index[train_size + i];
         for (int j = 0; j < n_features; j++)
+            (*X_valid)->data[i][j] = data->data[idx][j];
+        if (labels && *y_valid)
+            (*y_valid)->data[i][0] = labels->data[idx][0];
+    }
+    // Llenar conjuntos de prueba
+    for (int i = 0; i < test_size; i++)
+    {
+        int idx = index[train_size + valid_size + i];
+        for (int j = 0; j < n_features; j++)
             (*X_test)->data[i][j] = data->data[idx][j];
-
         if (labels && *y_test)
             (*y_test)->data[i][0] = labels->data[idx][0];
     }
 
     free(index);
-
     return 1;
 }
 
