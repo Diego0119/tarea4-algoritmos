@@ -27,5 +27,6 @@ void csv_free(CSVData *);
 int train_valid_test_split(Matrix *, Matrix *, double, double, Matrix **, Matrix **, Matrix **, Matrix **, Matrix **, Matrix **);
 void print_csv_data(CSVData *);
 void normalize_csv_data(Matrix *);
+void export_results_lr_to_csv(Matrix *X, Matrix *y_real, Matrix *y_pred, const char *filename);
 
 #endif

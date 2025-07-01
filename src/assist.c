@@ -82,3 +82,26 @@ void print_csv_data(CSVData *csv_data)
 
     fprintf(stdout, "\n");
 }
+
+// Exporta los resultados de regresión lineal a un archivo CSV para graficar
+// X: matriz de características (solo se usa la primera columna)
+// y_real: valores reales (primera columna)
+// y_pred: valores predichos (primera columna)
+// filename: ruta del archivo CSV de salida
+void export_results_lr_to_csv(Matrix *X, Matrix *y_real, Matrix *y_pred, const char *filename) {
+    if (!X || !y_real || !y_pred || X->rows != y_real->rows || X->rows != y_pred->rows) {
+        return;
+    }
+    FILE *file = fopen(filename, "w");
+    if (!file) {
+        // Manejo de error simple, puedes reemplazarlo por tu función de error
+        fprintf(stderr, "No se pudo abrir el archivo %s para escritura.\n", filename);
+        return;
+    }
+    // Escribir encabezado
+    fprintf(file, "X,Y_real,Y_predicho\n");
+    for (int i = 0; i < X->rows; i++) {
+        fprintf(file, "%f,%f,%f\n", X->data[i][0], y_real->data[i][0], y_pred->data[i][0]);
+    }
+    fclose(file);
+}

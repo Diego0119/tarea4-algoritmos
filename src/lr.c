@@ -104,6 +104,9 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
     if (!y_pred)
         predict_linear_regression_error(__FILE__, __LINE__, X_train, y_train, X_test, y_test, lr);
 
+    // Exportar resultados para graficar
+    export_results_lr_to_csv(X_test, y_test, y_pred, "stats/resultados_lr.csv");
+
     double test_mse = linear_regression_mse(y_test, y_pred);
     double test_r2 = linear_regression_r2_score(y_test, y_pred);
     double test_mae = linear_regression_mae(y_test, y_pred);
@@ -697,6 +700,10 @@ void compare_batch_vs_minibatch(Matrix *X_train, Matrix *y_train, Matrix *X_test
     fprintf(stdout, GREEN_COLOR "%-12.4f %-12.4f %-12.4f %-12.4f\n" RESET_COLOR, mse_batch, mae_batch, r2_batch, time_batch);
     fprintf(stdout, "%-10s | ", "Mini-batch");
     fprintf(stdout, RED_COLOR "%-12.4f %-12.4f %-12.4f %-12.4f\n\n" RESET_COLOR, mse_mb, mae_mb, r2_mb, time_mb);
+
+    // Exportar resultados de Batch y Mini-batch a CSV
+    export_results_lr_to_csv(X_test, y_test, y_pred_batch, "stats/resultados_lr_batch.csv");
+    export_results_lr_to_csv(X_test, y_test, y_pred_mb, "stats/resultados_lr_minibatch.csv");
 
     matrix_free(y_pred_batch);
     matrix_free(y_pred_mb);
