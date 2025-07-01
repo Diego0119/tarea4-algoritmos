@@ -87,10 +87,11 @@ int has_converged(Matrix *old, Matrix *new, double tol)
     return 1; // convergioo
 }
 
-// Función para ajustar el algoritmo K-Means
+// ajusta el algoritmo kmeans
 KMeansResult *kmeans_fit(Matrix *data, int k, int max_iters, double tol)
 {
-    Matrix *centroids = initialize_centroids(data, k);
+    // Matrix *centroids = initialize_centroids(data, k);
+    Matrix *centroids = initialize_centroids_kmeans_pp(data, k); // aca se aplica la optimizacion
     Matrix *old_centroids = matrix_create(k, data->cols);
     int *labels = malloc(sizeof(int) * data->rows);
 
@@ -125,4 +126,57 @@ void kmeans_free(KMeansResult *result)
     matrix_free(result->centroids);
     free(result->labels);
     free(result);
+}
+
+// Optimizacion
+Matrix *initialize_centroids_kmeans_pp(Matrix *data, int k)
+{
+    Matrix *centroids = matrix_create(k, data->cols);
+
+    // primer centroide aleatorio
+    int first_idx = rand() % data->rows;
+    for (int j = 0; j < data->cols; j++)
+        centroids->data[0][j] = data->data[first_idx][j];
+
+    double *distances = malloc(sizeof(double) * data->rows);
+
+    for (int c = 1; c < k; c++)
+    {
+        double sum = 0.0;
+
+        // para cda punto calcula la minima distancia al cuadrado a centroides ya seleccionados
+        for (int i = 0; i < data->rows; i++)
+        {
+            double min_dist = DBL_MAX;
+            for (int m = 0; m < c; m++)
+            {
+                double dist = euclidean_distance(data->data[i], centroids->data[m], data->cols);
+                if (dist < min_dist)
+                    min_dist = dist;
+            }
+            distances[i] = min_dist * min_dist; // distancia al cuadrado
+            sum += distances[i];
+        }
+
+        // nuevo centroide con probabilidad proporcional a distancia al cuadrado
+        double r = ((double)rand() / RAND_MAX) * sum;
+        double acc = 0.0;
+        int next_idx = 0;
+        for (int i = 0; i < data->rows; i++)
+        {
+            acc += distances[i];
+            if (acc >= r)
+            {
+                next_idx = i;
+                break;
+            }
+        }
+
+        // copiar punto seleccionado como nuevo centroide
+        for (int j = 0; j < data->cols; j++)
+            centroids->data[c][j] = data->data[next_idx][j];
+    }
+
+    free(distances);
+    return centroids;
 }
