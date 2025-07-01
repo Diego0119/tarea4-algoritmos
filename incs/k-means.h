@@ -26,5 +26,6 @@ double euclidean_distance(const double *, const double *, int);
 void assign_clusters(Matrix *, Matrix *, int *);
 void update_centroids(Matrix *, Matrix *, int *, int);
 int has_converged(Matrix *, Matrix *, double);
+Matrix *initialize_centroids_kmeans_pp(Matrix *data, int k); // funcion de optimizacion
 
 #endif
