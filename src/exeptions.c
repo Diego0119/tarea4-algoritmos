@@ -134,3 +134,11 @@ void predict_linear_regression_error(const char *file, int line, Matrix *X_train
     matrix_free(y_test);
     handle_error("No se pudieron realizar predicciones con regresion lineal", "Verifique los datos de entrada", file, line);
 }
+
+void kmeans_fit_error(const char *file, int line, Matrix *X)
+{
+    fprintf(stderr, RED_COLOR "Error en kmeans_fit en archivo %s, linea %d.\n" RESET_COLOR, file, line);
+    if (X)
+        matrix_free(X);
+    exit(EXIT_FAILURE);
+}

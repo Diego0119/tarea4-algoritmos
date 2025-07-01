@@ -148,37 +148,15 @@ void parse_args(char *argv[])
             }
         }
 
-        CSVData *csv_data = load_csv_data(filename, 1, 0, ',');
+        CSVData *csv_data = load_csv_data(filename, 1, 4, ',');
         if (!csv_data)
             read_csv_error(__FILE__, __LINE__, filename);
 
-        fprintf(stdout, GREEN_COLOR "\ndatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
+        fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
 
-        Matrix *data = csv_data->data;
-
-        KMeansResult *result = kmeans_fit(data, k, max_iters, tolerance);
-
-        printf(CYAN_COLOR "\nCentroides finales:\n" RESET_COLOR);
-        for (int i = 0; i < k; i++)
-        {
-            printf("Centroide %d: (", i);
-            for (int j = 0; j < result->centroids->cols; j++)
-            {
-                printf("%.4f", result->centroids->data[i][j]);
-                if (j < result->centroids->cols - 1)
-                    printf(", ");
-            }
-            printf(")\n");
-        }
-
-        printf(BRIGHT_PURPLE_COLOR "\nAsignaciones de cluster:\n" RESET_COLOR);
-        for (int i = 0; i < data->rows; i++)
-        {
-            printf("Punto %d → Cluster %d\n", i, result->labels[i]);
-        }
+        exec_kmeans(csv_data, k, max_iters, tolerance);
 
         csv_free(csv_data);
-        kmeans_free(result);
     }
     else
         argument_error(argv[1], __FILE__, __LINE__);

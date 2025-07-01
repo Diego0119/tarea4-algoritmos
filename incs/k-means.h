@@ -9,6 +9,7 @@
 #define KMEANS_H
 
 #include "matrix.h"
+#include "csv.h"
 
 typedef struct
 {
@@ -27,5 +28,8 @@ void assign_clusters(Matrix *, Matrix *, int *);
 void update_centroids(Matrix *, Matrix *, int *, int);
 int has_converged(Matrix *, Matrix *, double);
 Matrix *initialize_centroids_kmeans_pp(Matrix *data, int k); // funcion de optimizacion
+void print_confusion_matrix_kmeans(Matrix *y_true, int *y_pred, int k);
+void export_results_kmeans_to_csv(Matrix *y_true, int *y_pred, int k, const char *filename);
+void exec_kmeans(CSVData *csv_data, int k, int max_iters, double tol);
 
 #endif
