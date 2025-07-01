@@ -31,6 +31,7 @@ void parse_args(char *argv[])
             if (argv[3] != NULL)
             {
                 const char *filename = argv[3];
+
                 const char *extension = strrchr(filename, '.');
                 if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx") != 0))
                     csv_extension_error(__FILE__, __LINE__, filename);
@@ -59,28 +60,33 @@ void parse_args(char *argv[])
         if (argv[2] != NULL && argv[3] != NULL && argv[4] != NULL && argv[5] != NULL)
         {
             const char *filename = argv[2];
+
             double learning_rate = atof(argv[3]);
-            int max_iterations = atoi(argv[4]);
-            double tolerance = atof(argv[5]);
             if (learning_rate <= 0.0)
                 learning_rate_parameter_error(__FILE__, __LINE__);
+
+            int max_iterations = atoi(argv[4]);
             if (max_iterations <= 0)
                 iterations_parameter_error(__FILE__, __LINE__);
+
+            double tolerance = atof(argv[5]);
             if (tolerance <= 0.0)
                 tolerance = 1e-6;
+
             const char *extension = strrchr(filename, '.');
             if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx") != 0))
                 csv_extension_error(__FILE__, __LINE__, filename);
+
             CSVData *csv_data = load_csv_data(filename, 1, 0, ',');
             if (!csv_data)
                 read_csv_error(__FILE__, __LINE__, filename);
-            printf(CYAN_COLOR "\n╔══════════════════════════════════════════════════════════════╗\n");
-            printf("║                    " BRIGHT_PURPLE_COLOR "REGRESION LINEAL" CYAN_COLOR "                    ║\n");
-            printf("╚══════════════════════════════════════════════════════════════╝\n" RESET_COLOR);
-            printf(GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
-            printf(YELLOW_COLOR "\nEntrenando modelo...\n" RESET_COLOR);
+
+            fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
+
+            print_csv_data(csv_data);
+
             exec_linear_regression(csv_data, learning_rate, max_iterations, tolerance);
-            printf(YELLOW_COLOR "\nFin del analisis de regresion lineal.\n" RESET_COLOR);
+
             csv_free(csv_data);
         }
         else
