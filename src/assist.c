@@ -15,7 +15,7 @@ void show_help(void)
     fprintf(stdout, CYAN_COLOR "\nAYUDA DEL PROGRAMA:\n\n");
     fprintf(stdout, "uso:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out [opcion]\n");
-    fprintf(stdout, "\t./build/program.out [opcion] [parametros] [archivo]\n\n" RESET_COLOR);
+    fprintf(stdout, "\t./build/program.out [opcion] [archivo] [parametros necesarios] . . .\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "opciones:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t-h, --help\t\tmuestra esta ayuda.\n");
     fprintf(stdout, "\t-v, --version\t\tmuestra la version del programa.\n");
@@ -23,18 +23,22 @@ void show_help(void)
     fprintf(stdout, "\t-lr, --linear\t\taplicar regresion lineal.\n");
     fprintf(stdout, "\t-km, --kmeans\t\taplicar clustering k-means.\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "parametros de k-nearest neighbors:\n" RESET_COLOR);
-    fprintf(stdout, YELLOW_COLOR "\t[k]       = numero de vecinos (debe ser impar y mayor a 0)\n");
-    fprintf(stdout, "\t[archivo] = archivo CSV o Excel con los datos\n\n" RESET_COLOR);
+    fprintf(stdout, YELLOW_COLOR "\t[k]\t\t= numero de vecinos (debe ser impar y mayor a 0).\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "parametros de regresion lineal:\n" RESET_COLOR);
-    fprintf(stdout, YELLOW_COLOR "\t[archivo]   = archivo CSV o Excel con los datos\n");
-    fprintf(stdout, "\t[lr]        = learning rate (obligatorio)\n");
-    fprintf(stdout, "\t[iter]      = maximo de iteraciones (obligatorio)\n");
-    fprintf(stdout, "\t[tol]       = tolerancia de convergencia (obligatorio)\n\n" RESET_COLOR);
+    fprintf(stdout, YELLOW_COLOR "\t[learning rate]\t= tamano de paso de cada iteracion.\n");
+    fprintf(stdout, "\t[iteraciones]\t= maximo de iteraciones.\n");
+    fprintf(stdout, "\t[tolerancia]\t= tolerancia de convergencia.\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "parametros de k-means:\n" RESET_COLOR);
+    fprintf(stdout, YELLOW_COLOR "\t[k]\t\t= numero de clusters (debe ser mayor a 0).\n");
+    fprintf(stdout, "\t[iteraciones]\t= maximo de iteraciones.\n");
+    fprintf(stdout, "\t[tolerancia]\t= tolerancia de convergencia.\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "ejemplos:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out -h\n");
-    fprintf(stdout, "\t./build/program.out -knn 3 ./data/iris.csv\n");
+    fprintf(stdout, "\t./build/program.out -v\n");
+    fprintf(stdout, "\t./build/program.out -knn ./data/iris.csv 3\n");
     fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv 0.001 2000 1e-8\n");
-    fprintf(stdout, "\t./build/program.out -km ./data/iris.csv 3 100 1e-4\n\n" RESET_COLOR);
+    fprintf(stdout, "\t./build/program.out -km ./data/iris.csv 3 100 1e-4\n");
+    fprintf(stdout, "\tmake run (ejecuta todos los comandos disponibles)\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 
