@@ -24,7 +24,8 @@ CSVData *load_csv_data(const char *, int, int, char);
 int csv_dimensions(const char *, int, char, int *, int *);
 char *my_strdup(const char *);
 void csv_free(CSVData *);
-int train_test_split(Matrix *, Matrix *, double, Matrix **, Matrix **, Matrix **, Matrix **);
+int train_valid_test_split(Matrix *, Matrix *, double, double, Matrix **, Matrix **, Matrix **, Matrix **, Matrix **, Matrix **);
 void print_csv_data(CSVData *);
+void normalize_csv_data(Matrix *);
 
 #endif

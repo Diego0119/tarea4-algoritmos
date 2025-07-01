@@ -9,7 +9,7 @@
 #include "config.h"
 #include "csv.h"
 #include "k-nn.h"
-#include "linear-regression.h"
+#include "lr.h"
 
 // Función principal para manejar errores de manera centralizada
 void handle_error(const char *header, const char *detail, const char *file, int line)
@@ -74,9 +74,9 @@ void csv_extension_error(const char *file, int line, const char *filename)
     handle_error("La extension del archivo no es .csv", filename, file, line);
 }
 
-void train_test_split_error(const char *file, int line)
+void train_valid_test_split_error(const char *file, int line)
 {
-    handle_error("Los datos no se pudieron dividir en conjuntos de entrenamiento y prueba", "Verifique las dimensiones y proporciones", file, line);
+    handle_error("Los datos no se pudieron dividir en conjuntos de entrenamiento, validación y prueba", "Verifique las dimensiones y proporciones", file, line);
 }
 
 void create_knn_classifier_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test, KNNClassifier *knn)

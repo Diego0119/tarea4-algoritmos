@@ -30,6 +30,8 @@ KNNClassifier *knn_create(int);
 void knn_fit(KNNClassifier *, Matrix *, Matrix *);
 Matrix *knn_predict(KNNClassifier *, Matrix *, int);
 void knn_free(KNNClassifier *);
+void print_confusion_matrix(Matrix *, Matrix *);
+void export_results_knn_to_csv(Matrix *y_true, Matrix *y_pred, int k, const char *method_name, const char *filename);
 
 // Funciones auxiliares para el algoritmo KNN
 void quicksort(DistanceLabel *, int, int);

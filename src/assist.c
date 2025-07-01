@@ -12,24 +12,27 @@
 // muestra un mensaje de ayuda del programa
 void show_help(void)
 {
-    fprintf(stdout, CYAN_COLOR "\nayuda del programa:\n\n");
+    fprintf(stdout, CYAN_COLOR "\nAYUDA DEL PROGRAMA:\n\n");
     fprintf(stdout, "uso:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out [opcion]\n");
     fprintf(stdout, "\t./build/program.out [opcion] [parametros] [archivo]\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "opciones:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t-h, --help\t\tmuestra esta ayuda.\n");
     fprintf(stdout, "\t-v, --version\t\tmuestra la version del programa.\n");
-    fprintf(stdout, "\t-knn [k] [archivo]\taplicar algoritmo k-nearest neighbors.\n");
-    fprintf(stdout, "\t-lr, -linear [archivo] [lr] [iter] [tol]\taplicar regresion lineal.\n");
-    fprintf(stdout, "\t-km, --kmeans [archivo] [k] [iter] [tol]\taplicar clustering k-means.\n\n" RESET_COLOR);
+    fprintf(stdout, "\t-knn, --neighboor\taplicar algoritmo k-nearest neighbors.\n");
+    fprintf(stdout, "\t-lr, --linear\t\taplicar regresion lineal.\n");
+    fprintf(stdout, "\t-km, --kmeans\t\taplicar clustering k-means.\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "parametros de k-nearest neighbors:\n" RESET_COLOR);
+    fprintf(stdout, YELLOW_COLOR "\t[k]       = numero de vecinos (debe ser impar y mayor a 0)\n");
+    fprintf(stdout, "\t[archivo] = archivo CSV o Excel con los datos\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "parametros de regresion lineal:\n" RESET_COLOR);
-    fprintf(stdout, YELLOW_COLOR "\t[lr]   = learning rate (por defecto: 0.01)\n");
-    fprintf(stdout, "\t[iter] = maximo de iteraciones (por defecto: 1000)\n");
-    fprintf(stdout, "\t[tol]  = tolerancia de convergencia (por defecto: 1e-6)\n\n" RESET_COLOR);
+    fprintf(stdout, YELLOW_COLOR "\t[archivo]   = archivo CSV o Excel con los datos\n");
+    fprintf(stdout, "\t[lr]        = learning rate (obligatorio)\n");
+    fprintf(stdout, "\t[iter]      = maximo de iteraciones (obligatorio)\n");
+    fprintf(stdout, "\t[tol]       = tolerancia de convergencia (obligatorio)\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "ejemplos:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out -h\n");
     fprintf(stdout, "\t./build/program.out -knn 3 ./data/iris.csv\n");
-    fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv\n");
     fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv 0.001 2000 1e-8\n");
     fprintf(stdout, "\t./build/program.out -km ./data/iris.csv 3 100 1e-4\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
@@ -38,14 +41,14 @@ void show_help(void)
 // Muestra la versión del programa
 void show_version(void)
 {
-    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 1.3.3\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 3.0.2\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 
 // Imprime los datos al cargar el DF a la estructura CSVData
 void print_csv_data(CSVData *csv_data)
 {
-    fprintf(stdout, "\nDimensiones de los datos: %d filas x %d columnas\n", csv_data->data->rows, csv_data->data->cols);
+    fprintf(stdout, GREEN_COLOR "\nDimensiones de los datos: %d filas x %d columnas\n", csv_data->data->rows, csv_data->data->cols);
 
     if (csv_data->has_header && csv_data->header)
     {
@@ -54,7 +57,7 @@ void print_csv_data(CSVData *csv_data)
         for (int i = 0; i < csv_data->data->cols; i++)
             fprintf(stdout, "%s ", csv_data->header[i]);
 
-        fprintf(stdout, "%s (etiqueta)\n", csv_data->header[csv_data->label_col]);
+        fprintf(stdout, "%s (etiqueta)\n" RESET_COLOR, csv_data->header[csv_data->label_col]);
     }
 
     fprintf(stdout, YELLOW_COLOR "\nPrimeras 5 muestras:\n\n" RESET_COLOR);
