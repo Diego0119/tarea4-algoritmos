@@ -28,6 +28,7 @@ run: all
 	./$(BUILD_DIR)/$(EXEC) -v
 	./$(BUILD_DIR)/$(EXEC) -knn 3 ./data/iris.csv
 	./$(BUILD_DIR)/$(EXEC) -lr ./data/iris.csv 0.01 2000 1e-8
+	./$(BUILD_DIR)/$(EXEC) -km ./data/iris.csv 3 100 1e-4
 
 clean:
 	rm -f $(OBJ_FILES)
@@ -44,3 +45,4 @@ run-val: all
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -v
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -knn 3 ./data/iris.csv
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -lr ./data/iris.csv 0.01 2000 1e-8
+	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -km ./data/iris.csv 3 100 1e-4
