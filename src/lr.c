@@ -24,33 +24,49 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
     if (!train_valid_test_split(csv_data->data, csv_data->labels, valid_ratio, test_ratio, &X_train, &y_train, &X_valid, &y_valid, &X_test, &y_test))
         train_valid_test_split_error(__FILE__, __LINE__);
 
-    printf("Conjunto de entrenamiento: %d muestras x %d caracteristicas\n", X_train->rows, X_train->cols);
-    printf("Conjunto de validacion: %d muestras x %d caracteristicas\n", X_valid->rows, X_valid->cols);
-    printf("Conjunto de prueba: %d muestras x %d caracteristicas\n", X_test->rows, X_test->cols);
-    printf("\n");
+    fprintf(stdout, "Conjunto de entrenamiento: %d muestras x %d caracteristicas\n", X_train->rows, X_train->cols);
+    fprintf(stdout, "Conjunto de validacion: %d muestras x %d caracteristicas\n", X_valid->rows, X_valid->cols);
+    fprintf(stdout, "Conjunto de prueba: %d muestras x %d caracteristicas\n\n", X_test->rows, X_test->cols);
+
     int n_samples_to_show = X_train->rows < 5 ? X_train->rows : 5;
-    printf(YELLOW_COLOR "Primeras %d muestras del conjunto de entrenamiento:\n" RESET_COLOR, n_samples_to_show);
-    printf("\n");   
-    if (csv_data->has_header && csv_data->header) {
-        printf("  [");
-        for (int j = 0; j < X_train->cols; j++) {
-            printf("%s", csv_data->header[j]);
-            if (j < X_train->cols - 1) printf(", ");
+
+    fprintf(stdout, YELLOW_COLOR "Primeras %d muestras del conjunto de entrenamiento:\n\n" RESET_COLOR, n_samples_to_show);
+
+    if (csv_data->has_header && csv_data->header)
+    {
+        fprintf(stdout, "\t\t[");
+
+        for (int j = 0; j < X_train->cols; j++)
+        {
+            fprintf(stdout, "%13s", csv_data->header[j]);
+
+            if (j < X_train->cols - 1)
+                fprintf(stdout, ", ");
         }
-        printf("] -> Label\n");
+
+        fprintf(stdout, "] -> Label\n");
     }
-    for (int i = 0; i < n_samples_to_show; i++) {
-        printf("Muestra %-2d:[", i + 1);
-        for (int j = 0; j < X_train->cols; j++) {
-            printf("%7.4f", X_train->data[i][j]);
-            if (j < X_train->cols - 1) printf(", ");
+
+    for (int i = 0; i < n_samples_to_show; i++)
+    {
+        fprintf(stdout, "Muestra %-2d:\t[", i + 1);
+
+        for (int j = 0; j < X_train->cols; j++)
+        {
+            fprintf(stdout, "%13.4f", X_train->data[i][j]);
+
+            if (j < X_train->cols - 1)
+                fprintf(stdout, ", ");
         }
-        printf("] -> %.4f\n", y_train->data[i][0]);
+
+        fprintf(stdout, "] -> %.4f\n", y_train->data[i][0]);
     }
-    printf("\n");
+
+    fprintf(stdout, "\n");
+
     double *means = (double *)calloc(X_train->cols, sizeof(double));
     double *stds = (double *)calloc(X_train->cols, sizeof(double));
-    printf("\n");
+
     if (!means || !stds)
     {
         if (means)
@@ -98,32 +114,35 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
         linear_regression_fit_normal(lr, X_train, y_train, ridge, LR_LAMBDA);
     }
     else
-        linear_regression_fit_regularized(lr, X_train, y_train, &metrics, LR_REGULARIZATION, LR_LAMBDA); 
+        linear_regression_fit_regularized(lr, X_train, y_train, &metrics, LR_REGULARIZATION, LR_LAMBDA);
 
     Matrix *y_pred = linear_regression_predict(lr, X_test);
     if (!y_pred)
         predict_linear_regression_error(__FILE__, __LINE__, X_train, y_train, X_test, y_test, lr);
 
-    // Exportar resultados para graficar
     export_results_lr_to_csv(X_test, y_test, y_pred, "stats/resultados_lr.csv");
 
     double test_mse = linear_regression_mse(y_test, y_pred);
     double test_r2 = linear_regression_r2_score(y_test, y_pred);
     double test_mae = linear_regression_mae(y_test, y_pred);
 
-    printf(CYAN_COLOR "Parámetros del modelo entrenado:\n" RESET_COLOR);
-    printf("  Pesos (coeficientes): ");
-    for (int i = 0; i < lr->weights->rows; i++) {
-        printf("%.4f", lr->weights->data[i][0]);
-        if (i < lr->weights->rows - 1) printf(", ");
-    }
-    printf("\n");
-    printf("  Término independiente (intercepto): %.4f\n", lr->bias);
+    fprintf(stdout, CYAN_COLOR "Parámetros del modelo entrenado:\n\n" RESET_COLOR);
 
-    printf(CYAN_COLOR "\nMétricas de evaluación en el conjunto de prueba:\n" RESET_COLOR);
-    printf("  MSE : %.4f\n", test_mse);
-    printf("  MAE : %.4f\n", test_mae);
-    printf("  R2  : %.4f\n\n", test_r2);
+    fprintf(stdout, "Pesos (coeficientes):\t\t\t");
+    for (int i = 0; i < lr->weights->rows; i++)
+    {
+        fprintf(stdout, "%.4f", lr->weights->data[i][0]);
+
+        if (i < lr->weights->rows - 1)
+            printf(", ");
+    }
+
+    fprintf(stdout, "\nTermino independiente (intercepto):\t%.4f\n", lr->bias);
+
+    fprintf(stdout, CYAN_COLOR "\nMetricas de evaluación en el conjunto de prueba:\n\n" RESET_COLOR);
+    fprintf(stdout, "MSE : %.4f\n", test_mse);
+    fprintf(stdout, "MAE : %.4f\n", test_mae);
+    fprintf(stdout, "R2  : %.4f\n\n", test_r2);
 
     compare_batch_vs_minibatch(X_train, y_train, X_test, y_test, learning_rate, max_iterations, tolerance, LR_REGULARIZATION, LR_LAMBDA); // Comparacion de metodos
 
@@ -809,4 +828,21 @@ void gradient_descent_step(LinearRegression *lr, Matrix *X, Matrix *y, Matrix *p
     matrix_free(errors);
     matrix_free(X_transpose);
     matrix_free(weight_gradients);
+}
+
+// Exporta los resultados de regresión lineal a un archivo CSV para graficar
+void export_results_lr_to_csv(Matrix *X, Matrix *y_real, Matrix *y_pred, const char *filename)
+{
+    if (!X || !y_real || !y_pred || X->rows != y_real->rows || X->rows != y_pred->rows)
+        return;
+
+    FILE *file = fopen(filename, "w");
+    if (!file)
+        open_file_error(__FILE__, __LINE__, filename);
+
+    fprintf(file, "X,Y_real,Y_predicho\n");
+    for (int i = 0; i < X->rows; i++)
+        fprintf(file, "%f,%f,%f\n", X->data[i][0], y_real->data[i][0], y_pred->data[i][0]);
+
+    fclose(file);
 }
