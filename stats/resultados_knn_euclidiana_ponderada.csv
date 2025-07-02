@@ -1,0 +1,12 @@
+Metodo,K,Clases
+Euclidiana Ponderada,3,0;1;2
+Clase,Precision,Recall,F1-Score
+0,1.0000,1.0000,1.0000
+1,0.7500,0.8571,0.8000
+2,0.8889,0.8000,0.8421
+
+Matriz de Confusion
+Real/Pred,0,1,2
+0,13,0,0
+1,0,6,1
+2,0,2,8

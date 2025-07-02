@@ -28,5 +28,7 @@ bin/
 .vscode/
 *.sublime-workspace
 
+.venv/
+
 Thumbs.db
 Desktop.ini

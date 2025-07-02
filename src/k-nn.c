@@ -83,12 +83,64 @@ void exec_knn(CSVData *csv_data, int k)
     fprintf(stdout, CYAN_COLOR "Matriz de Confusion (Manhattan):\n\n" RESET_COLOR);
     print_confusion_matrix(y_test, y_pred_manhattan);
 
+    fprintf(stdout, CYAN_COLOR "Usando Metrica de Distancia Euclidiana Ponderada\n\n" RESET_COLOR);
+
+    // Realizar predicciones con distancia Euclidiana ponderada
+    Matrix *y_pred_eucledian_weighted = knn_predict(knn, X_test, 2); // 2 para usar distancia euclidiana ponderada
+    if (!y_pred_eucledian_weighted)
+        predict_knn_error(__FILE__, __LINE__, X_train, y_train, X_test, y_test, knn);
+
+    // Calcular precisión con métrica euclidiana ponderada (porcentaje de predicciones correctas)
+    int correct_euclidean_weighted = 0;
+    for (int i = 0; i < y_test->rows; i++)
+        if (y_test->data[i][0] == y_pred_eucledian_weighted->data[i][0])
+            correct_euclidean_weighted++;
+
+    double precision_euclidean_weighted = (double)correct_euclidean_weighted / y_test->rows;
+
+    fprintf(stdout, YELLOW_COLOR "Primeras 5 predicciones:\n\n" RESET_COLOR);
+    for (int i = 0; i < 5 && i < y_test->rows; i++)
+        fprintf(stdout, "Real: %.0f, Prediccion: %.0f\n", y_test->data[i][0], y_pred_eucledian_weighted->data[i][0]);
+
+    fprintf(stdout, "Precision del modelo KNN (k=%d, Euclidiana Ponderada): %.4f\n\n", k, precision_euclidean_weighted);
+
+    fprintf(stdout, CYAN_COLOR "Matriz de Confusion (Euclidiana Ponderada):\n\n" RESET_COLOR);
+    print_confusion_matrix(y_test, y_pred_eucledian_weighted);
+
+    fprintf(stdout, CYAN_COLOR "Usando Metrica de Distancia Manhattan Ponderada\n\n" RESET_COLOR);
+
+    // Realizar predicciones con distancia Manhattan ponderada
+    Matrix *y_pred_manhattan_weighted = knn_predict(knn, X_test, 3); // 3 para usar distancia manhattan ponderada
+    if (!y_pred_manhattan_weighted)
+        predict_knn_error(__FILE__, __LINE__, X_train, y_train, X_test, y_test, knn);
+
+    // Calcular precisión con métrica manhattan ponderada (porcentaje de predicciones correctas)
+    int correct_manhattan_weighted = 0;
+    for (int i = 0; i < y_test->rows; i++)
+        if (y_test->data[i][0] == y_pred_manhattan_weighted->data[i][0])
+            correct_manhattan_weighted++;
+
+    double precision_manhattan_weighted = (double)correct_manhattan_weighted / y_test->rows;
+
+    fprintf(stdout, YELLOW_COLOR "Primeras 5 predicciones:\n\n" RESET_COLOR);
+    for (int i = 0; i < 5 && i < y_test->rows; i++)
+        fprintf(stdout, "Real: %.0f, Prediccion: %.0f\n", y_test->data[i][0], y_pred_manhattan_weighted->data[i][0]);
+
+    fprintf(stdout, GREEN_COLOR "\nPrecision del modelo KNN (k=%d, Manhattan Ponderada): %.4f\n\n" RESET_COLOR, k, precision_manhattan_weighted);
+
+    fprintf(stdout, CYAN_COLOR "Matriz de Confusion (Manhattan Ponderada):\n\n" RESET_COLOR);
+    print_confusion_matrix(y_test, y_pred_manhattan_weighted);
+
     export_results_knn_to_csv(y_test, y_pred_eucledian, k, "Euclidiana", "stats/resultados_knn_euclidiana.csv");
     export_results_knn_to_csv(y_test, y_pred_manhattan, k, "Manhattan", "stats/resultados_knn_manhattan.csv");
+    export_results_knn_to_csv(y_test, y_pred_eucledian_weighted, k, "Euclidiana Ponderada", "stats/resultados_knn_euclidiana_ponderada.csv");
+    export_results_knn_to_csv(y_test, y_pred_manhattan_weighted, k, "Manhattan Ponderada", "stats/resultados_knn_manhattan_ponderada.csv");
     fprintf(stdout, GREEN_COLOR "Resultados exportados a la carpeta stats.\n\n" RESET_COLOR);
 
     matrix_free(y_pred_eucledian);
     matrix_free(y_pred_manhattan);
+    matrix_free(y_pred_eucledian_weighted);
+    matrix_free(y_pred_manhattan_weighted);
     matrix_free(X_train);
     matrix_free(y_train);
     matrix_free(X_valid);
@@ -148,67 +200,116 @@ Matrix *knn_predict(KNNClassifier *knn, Matrix *X, int distance_metric)
             return NULL;
         }
 
-        // Calculo distancia euclidiana a todas las muestras de entrenamiento
+        // Calculo distancia a todas las muestras de entrenamiento
         for (int j = 0; j < knn->X_train->rows; j++)
         {
-            if (distance_metric == 0)
-                distances[j].distance = euclidean_distance(X->data[i], knn->X_train->data[j], X->cols); // Calcular la distancia Euclidiana
-            else if (distance_metric == 1)
-                distances[j].distance = manhattan_distance(X->data[i], knn->X_train->data[j], X->cols); // Calcular la distancia Manhattan
-
-            distances[j].label = knn->y_train->data[j][0]; // Almacenar la etiqueta correspondiente
+            if (distance_metric == 0 || distance_metric == 2)
+                distances[j].distance = euclidean_distance(X->data[i], knn->X_train->data[j], X->cols);
+            else if (distance_metric == 1 || distance_metric == 3)
+                distances[j].distance = manhattan_distance(X->data[i], knn->X_train->data[j], X->cols);
+            distances[j].label = knn->y_train->data[j][0];
         }
 
         // Ordenar las distancias para encontrar los k vecinos más cercanos
         quicksort(distances, 0, knn->X_train->rows - 1);
 
-        // Encontrar la clase mayoritaria entre los k vecinos más cercanos, contar ocurrencias de cada clase
-        int classes[MAX_CLASSES];
-        int counts[MAX_CLASSES];
-        int num_clases = 0;
-
-        for (int k = 0; k < MAX_CLASSES; k++)
+        // KNN ponderado por distancia (2: euclidiana ponderada, 3: manhattan ponderada)
+        if (distance_metric == 2 || distance_metric == 3)
         {
-            classes[k] = -1;
-            counts[k] = 0;
-        }
+            double classes[MAX_CLASSES];
+            double weights[MAX_CLASSES];
+            int num_clases = 0;
 
-        // Contar votos de los k vecinos más cercanos
-        for (int k_idx = 0; k_idx < knn->k && k_idx < knn->X_train->rows; k_idx++)
-        {
-            double current_label = distances[k_idx].label; // Etiqueta del vecino actual
+            // Inicializar clases y pesos
+            for (int k = 0; k < MAX_CLASSES; k++)
+            {
+                classes[k] = -1;
+                weights[k] = 0.0;
+            }
 
-            // Verificar si la clase ya está registrada
-            int class_found = 0;
-            for (int c = 0; c < num_clases; c++)
-                if (classes[c] == current_label) // Si la clase ya está registrada
+            // Calcular pesos para cada clase basada en las distancias
+            for (int k_idx = 0; k_idx < knn->k && k_idx < knn->X_train->rows; k_idx++)
+            {
+                double current_label = distances[k_idx].label;
+                double d = distances[k_idx].distance;
+                double w = (d == 0.0) ? 1e9 : 1.0 / d; // Peso alto si distancia cero
+                int class_found = 0;
+
+                for (int c = 0; c < num_clases; c++)
+                    if (classes[c] == current_label)
+                    {
+                        weights[c] += w;
+                        class_found = 1;
+                        break;
+                    }
+
+                // Si la clase no se ha encontrado, agregarla
+                if (!class_found && num_clases < MAX_CLASSES)
                 {
-                    counts[c]++;
-                    class_found = 1;
-                    break;
+                    classes[num_clases] = current_label;
+                    weights[num_clases] = w;
+                    num_clases++;
+                }
+            }
+
+            // Elegir la clase con mayor peso
+            double predicted_class = classes[0];
+            double max_weight = weights[0];
+
+            for (int c = 1; c < num_clases; c++)
+                if (weights[c] > max_weight)
+                {
+                    max_weight = weights[c];
+                    predicted_class = classes[c];
                 }
 
-            // Si la clase no está registrada, se añade
-            if (!class_found && num_clases < MAX_CLASSES)
-            {
-                classes[num_clases] = current_label;
-                counts[num_clases] = 1;
-                num_clases++;
-            }
+            predictions->data[i][0] = predicted_class;
         }
+        else // KNN normal (voto mayoritario)
+        {
+            int classes[MAX_CLASSES];
+            int counts[MAX_CLASSES];
+            int num_clases = 0;
 
-        // Encontrar la clase con más votos
-        double predicted_class = classes[0];
-        int max_votes = counts[0];
-
-        for (int c = 1; c < num_clases; c++)
-            if (counts[c] > max_votes) // Si la clase actual tiene más votos
+            for (int k = 0; k < MAX_CLASSES; k++)
             {
-                max_votes = counts[c];
-                predicted_class = classes[c];
+                classes[k] = -1;
+                counts[k] = 0;
             }
 
-        predictions->data[i][0] = predicted_class; // Asignar la predicción a la matriz de resultados
+            for (int k_idx = 0; k_idx < knn->k && k_idx < knn->X_train->rows; k_idx++)
+            {
+                double current_label = distances[k_idx].label;
+                int class_found = 0;
+                for (int c = 0; c < num_clases; c++)
+                    if (classes[c] == current_label)
+                    {
+                        counts[c]++;
+                        class_found = 1;
+                        break;
+                    }
+
+                // Si la clase no se ha encontrado, agregarla
+                if (!class_found && num_clases < MAX_CLASSES)
+                {
+                    classes[num_clases] = current_label;
+                    counts[num_clases] = 1;
+                    num_clases++;
+                }
+            }
+
+            double predicted_class = classes[0];
+            int max_votes = counts[0];
+
+            for (int c = 1; c < num_clases; c++)
+                if (counts[c] > max_votes)
+                {
+                    max_votes = counts[c];
+                    predicted_class = classes[c];
+                }
+
+            predictions->data[i][0] = predicted_class;
+        }
 
         free(distances);
     }

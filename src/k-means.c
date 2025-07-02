@@ -43,14 +43,15 @@ void exec_kmeans(CSVData *csv_data, int k, int max_iters, double tol)
 Matrix *initialize_centroids(Matrix *data, int k)
 {
     Matrix *centroids = matrix_create(k, data->cols);
+
     for (int i = 0; i < k; i++)
     {
         int random_idx = rand() % data->rows;
+
         for (int j = 0; j < data->cols; j++)
-        {
             centroids->data[i][j] = data->data[random_idx][j];
-        }
     }
+
     return centroids;
 }
 
@@ -61,15 +62,18 @@ void assign_clusters(Matrix *data, Matrix *centroids, int *labels)
     {
         double min_dist = DBL_MAX;
         int best_cluster = -1;
+
         for (int c = 0; c < centroids->rows; c++)
         {
             double dist = euclidean_distance(data->data[i], centroids->data[c], data->cols);
+
             if (dist < min_dist)
             {
                 min_dist = dist;
                 best_cluster = c;
             }
         }
+
         labels[i] = best_cluster;
     }
 }
@@ -78,6 +82,7 @@ void assign_clusters(Matrix *data, Matrix *centroids, int *labels)
 void update_centroids(Matrix *data, Matrix *centroids, int *labels, int k)
 {
     int *counts = calloc(k, sizeof(int));
+
     for (int i = 0; i < k; i++)
         for (int j = 0; j < data->cols; j++)
             centroids->data[i][j] = 0.0;
@@ -86,20 +91,18 @@ void update_centroids(Matrix *data, Matrix *centroids, int *labels, int k)
     {
         int cluster = labels[i];
         counts[cluster]++;
+
         for (int j = 0; j < data->cols; j++)
-        {
             centroids->data[cluster][j] += data->data[i][j];
-        }
     }
 
     for (int i = 0; i < k; i++)
     {
         if (counts[i] == 0)
-            continue; // evitar division por 0
+            continue; // Evitar division por 0
+
         for (int j = 0; j < data->cols; j++)
-        {
             centroids->data[i][j] /= counts[i];
-        }
     }
 
     free(counts);
@@ -109,18 +112,17 @@ void update_centroids(Matrix *data, Matrix *centroids, int *labels, int k)
 int has_converged(Matrix *old, Matrix *new, double tol)
 {
     for (int i = 0; i < old->rows; i++)
-    {
         if (euclidean_distance(old->data[i], new->data[i], old->cols) > tol)
-            return 0; // no convergio
-    }
-    return 1; // convergioo
+            return 0; // No convergio
+
+    return 1; // Convergioo
 }
 
-// ajusta el algoritmo kmeans
+// Ajusta el algoritmo kmeans
 KMeansResult *kmeans_fit(Matrix *data, int k, int max_iters, double tol)
 {
     // Matrix *centroids = initialize_centroids(data, k);
-    Matrix *centroids = initialize_centroids_kmeans_pp(data, k); // aca se aplica la optimizacion
+    Matrix *centroids = initialize_centroids_kmeans_pp(data, k); // Acá se aplica la optimizacion
     Matrix *old_centroids = matrix_create(k, data->cols);
     int *labels = malloc(sizeof(int) * data->rows);
 
@@ -146,6 +148,7 @@ KMeansResult *kmeans_fit(Matrix *data, int k, int max_iters, double tol)
     result->labels = labels;
     result->max_iters = max_iters;
     result->tolerance = tol;
+
     return result;
 }
 
@@ -162,7 +165,7 @@ Matrix *initialize_centroids_kmeans_pp(Matrix *data, int k)
 {
     Matrix *centroids = matrix_create(k, data->cols);
 
-    // primer centroide aleatorio
+    // Primer centroide aleatorio
     int first_idx = rand() % data->rows;
     for (int j = 0; j < data->cols; j++)
         centroids->data[0][j] = data->data[first_idx][j];
@@ -173,27 +176,32 @@ Matrix *initialize_centroids_kmeans_pp(Matrix *data, int k)
     {
         double sum = 0.0;
 
-        // para cda punto calcula la minima distancia al cuadrado a centroides ya seleccionados
+        // Para cada punto calcula la minima distancia al cuadrado a centroides ya seleccionados
         for (int i = 0; i < data->rows; i++)
         {
             double min_dist = DBL_MAX;
+
             for (int m = 0; m < c; m++)
             {
                 double dist = euclidean_distance(data->data[i], centroids->data[m], data->cols);
+
                 if (dist < min_dist)
                     min_dist = dist;
             }
-            distances[i] = min_dist * min_dist; // distancia al cuadrado
+
+            distances[i] = min_dist * min_dist; // Distancia al cuadrado
             sum += distances[i];
         }
 
-        // nuevo centroide con probabilidad proporcional a distancia al cuadrado
+        // Nuevo centroide con probabilidad proporcional a distancia al cuadrado
         double r = ((double)rand() / RAND_MAX) * sum;
         double acc = 0.0;
         int next_idx = 0;
+
         for (int i = 0; i < data->rows; i++)
         {
             acc += distances[i];
+
             if (acc >= r)
             {
                 next_idx = i;
@@ -201,12 +209,13 @@ Matrix *initialize_centroids_kmeans_pp(Matrix *data, int k)
             }
         }
 
-        // copiar punto seleccionado como nuevo centroide
+        // Copiar punto seleccionado como nuevo centroide
         for (int j = 0; j < data->cols; j++)
             centroids->data[c][j] = data->data[next_idx][j];
     }
 
     free(distances);
+
     return centroids;
 }
 

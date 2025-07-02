@@ -14,7 +14,7 @@
 #define LR_METHOD "gradient" // Opciones: "gradient", "normal"
 // Regularizacion: "none", "ridge", "lasso"
 #define LR_REGULARIZATION "ridge" // Opciones: "none", "ridge", "lasso"
-#define LR_LAMBDA 0.1 // Parametro de regularizacion
+#define LR_LAMBDA 0.1             // Parametro de regularizacion
 
 typedef struct
 {
@@ -47,6 +47,7 @@ void linear_regression_fit_regularized(LinearRegression *, Matrix *, Matrix *, R
 void linear_regression_fit_minibatch(LinearRegression *, Matrix *, Matrix *, RegressionMetrics **, int, const char *, double);
 void compare_batch_vs_minibatch(Matrix *, Matrix *, Matrix *, Matrix *, double, int, double, const char *, double);
 void linear_regression_free(LinearRegression *);
+void export_results_lr_to_csv(Matrix *, Matrix *, Matrix *, const char *);
 
 // Funciones auxiliares para la regresion lineal
 void gradient_descent_step(LinearRegression *, Matrix *, Matrix *, Matrix *);
