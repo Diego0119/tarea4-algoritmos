@@ -99,9 +99,6 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
             stds[j] = 1.0;
     }
 
-    normalize_features_with_stats(X_train, means, stds, 0);
-    normalize_features_with_stats(X_test, means, stds, 0);
-
     LinearRegression *lr = linear_regression_create(X_train->cols, learning_rate, max_iterations, tolerance);
     if (!lr)
         create_linear_regression_error(__FILE__, __LINE__, X_train, y_train, X_test, y_test, lr);
@@ -748,48 +745,6 @@ void regression_metrics_free(RegressionMetrics *metrics)
         free(metrics->cost_history);
 
     free(metrics);
-}
-
-// Normalizar caracteristicas usando estadisticas del conjunto de entrenamiento
-void normalize_features_with_stats(Matrix *X, double *means, double *stds, int compute_stats)
-{
-    if (!X)
-        return;
-
-    // Si compute_stats es 1, calcular estadisticas (para X_train)
-    // Si compute_stats es 0, usar estadisticas proporcionadas (para X_test)
-    if (compute_stats)
-        for (int j = 0; j < X->cols; j++)
-        {
-            double mean = 0.0;
-
-            for (int i = 0; i < X->rows; i++)
-                mean += X->data[i][j];
-
-            mean /= X->rows;
-            means[j] = mean;
-
-            double std = 0.0;
-
-            for (int i = 0; i < X->rows; i++)
-            {
-                double diff = X->data[i][j] - mean;
-                std += diff * diff;
-            }
-
-            std = sqrt(std / X->rows);
-
-            // Evitar division por cero
-            if (std < 1e-8)
-                std = 1.0;
-
-            stds[j] = std;
-        }
-
-    // Aplicar normalizacion usando las estadisticas
-    for (int j = 0; j < X->cols; j++)
-        for (int i = 0; i < X->rows; i++)
-            X->data[i][j] = (X->data[i][j] - means[j]) / stds[j];
 }
 
 // Paso de gradiente descendente

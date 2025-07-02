@@ -52,6 +52,5 @@ void export_results_lr_to_csv(Matrix *, Matrix *, Matrix *, const char *);
 // Funciones auxiliares para la regresion lineal
 void gradient_descent_step(LinearRegression *, Matrix *, Matrix *, Matrix *);
 void regression_metrics_free(RegressionMetrics *);
-void normalize_features_with_stats(Matrix *, double *, double *, int);
 
 #endif

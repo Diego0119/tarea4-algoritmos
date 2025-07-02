@@ -28,7 +28,14 @@ bin/
 .vscode/
 *.sublime-workspace
 
-.venv/
+*.venv/
+venv/
+pyvenv.cfg
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
 
 Thumbs.db
 Desktop.ini
