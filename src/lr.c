@@ -155,6 +155,10 @@ void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_ite
     matrix_free(y_train);
     matrix_free(X_test);
     matrix_free(y_test);
+    if (X_valid)
+        matrix_free(X_valid);
+    if (y_valid)
+        matrix_free(y_valid);
 }
 
 // Aplica el algoritmo de regresion lineal al conjunto de datos
