@@ -17,11 +17,11 @@ void show_help(void)
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out [opcion]\n");
     fprintf(stdout, "\t./build/program.out [opcion] [archivo] [parametros necesarios] . . .\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "opciones:\n" RESET_COLOR);
-    fprintf(stdout, YELLOW_COLOR "\t-h, --help\t\tmuestra esta ayuda.\n");
-    fprintf(stdout, "\t-v, --version\t\tmuestra la version del programa.\n");
-    fprintf(stdout, "\t-knn, --neighboor\taplicar algoritmo k-nearest neighbors.\n");
-    fprintf(stdout, "\t-lr, --linear\t\taplicar regresion lineal.\n");
-    fprintf(stdout, "\t-km, --kmeans\t\taplicar clustering k-means.\n\n" RESET_COLOR);
+    fprintf(stdout, YELLOW_COLOR "\t-h\t\tmuestra esta ayuda.\n");
+    fprintf(stdout, "\t-v\t\tmuestra la version del programa.\n");
+    fprintf(stdout, "\t-k\t\taplicar algoritmo k-nearest neighbors.\n");
+    fprintf(stdout, "\t-l\t\taplicar regresion lineal.\n");
+    fprintf(stdout, "\t-m\t\taplicar clustering k-means.\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "parametros de k-nearest neighbors:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t[k]\t\t= numero de vecinos (debe ser impar y mayor a 0).\n\n" RESET_COLOR);
     fprintf(stdout, CYAN_COLOR "parametros de regresion lineal:\n" RESET_COLOR);
@@ -35,9 +35,9 @@ void show_help(void)
     fprintf(stdout, CYAN_COLOR "ejemplos:\n" RESET_COLOR);
     fprintf(stdout, YELLOW_COLOR "\t./build/program.out -h\n");
     fprintf(stdout, "\t./build/program.out -v\n");
-    fprintf(stdout, "\t./build/program.out -knn ./data/iris.csv 3\n");
-    fprintf(stdout, "\t./build/program.out -lr ./data/iris.csv 0.001 2000 1e-8\n");
-    fprintf(stdout, "\t./build/program.out -km ./data/iris.csv 3 100 1e-4\n");
+    fprintf(stdout, "\t./build/program.out -k ./data/iris.csv 1\n");
+    fprintf(stdout, "\t./build/program.out -l ./data/iris.csv 0.001 2000 1e-8\n");
+    fprintf(stdout, "\t./build/program.out -m ./data/iris.csv 3 100 1e-4\n");
     fprintf(stdout, "\tmake run (ejecuta todos los comandos disponibles)\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
@@ -45,7 +45,7 @@ void show_help(void)
 // Muestra la versión del programa
 void show_version(void)
 {
-    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 4.2.5\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 4.5.9\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 
