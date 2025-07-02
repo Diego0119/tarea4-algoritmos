@@ -9,7 +9,7 @@
 #define UTILS_H
 
 // Funciones auxiliares
-void parse_args(char **argv);
+void parse_args(int, char **);
 void show_help(void);
 void show_version(void);
 

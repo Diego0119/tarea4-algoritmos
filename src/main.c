@@ -14,10 +14,7 @@ int main(int argc, char *argv[])
 {
     srand(3);
 
-    if (argc < 2)
-        number_arguments_error(__FILE__, __LINE__);
-
-    parse_args(argv);
+    parse_args(argc, argv);
 
     return EXIT_SUCCESS;
 }

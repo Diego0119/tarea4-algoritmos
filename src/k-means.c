@@ -14,12 +14,10 @@
 
 void exec_kmeans(CSVData *csv_data, int k, int max_iters, double tol)
 {
-    fprintf(stdout, CYAN_COLOR "Algoritmo K-Means\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "Algoritmo K-Means\n" RESET_COLOR);
 
     Matrix *X = csv_data->data;
     Matrix *y_true = csv_data->labels;
-
-    fprintf(stdout, "Conjunto completo: %d muestras x %d características\n", X->rows, X->cols);
 
     KMeansResult *result = kmeans_fit(X, k, max_iters, tol);
     if (!result)
@@ -31,11 +29,10 @@ void exec_kmeans(CSVData *csv_data, int k, int max_iters, double tol)
     for (int i = 0; i < 5 && i < X->rows; i++)
         fprintf(stdout, "Real: %.0f, Cluster asignado: %d\n", y_true->data[i][0], result->labels[i]);
 
-    fprintf(stdout, CYAN_COLOR "\nMatriz de Confusión K-Means:\n\n" RESET_COLOR);
     print_confusion_matrix_kmeans(y_true, result->labels, k);
 
     export_results_kmeans_to_csv(y_true, result->labels, k, "stats/resultados_kmeans.csv");
-    fprintf(stdout, GREEN_COLOR "\nResultados exportados a stats/resultados_kmeans.csv\n\n" RESET_COLOR);
+    fprintf(stdout, GREEN_COLOR "Resultados exportados a stats/resultados_kmeans.csv\n\n" RESET_COLOR);
 
     kmeans_free(result);
 }
@@ -231,14 +228,14 @@ void print_confusion_matrix_kmeans(Matrix *y_true, int *y_pred, int k)
     {
         int current_class = (int)(y_true->data[i][0] + 0.5);
         int found = 0;
+
         for (int j = 0; j < num_classes; j++)
-        {
             if (classes[j] == current_class)
             {
                 found = 1;
                 break;
             }
-        }
+
         if (!found && num_classes < MAX_CLASSES)
         {
             classes[num_classes] = current_class;
@@ -261,30 +258,30 @@ void print_confusion_matrix_kmeans(Matrix *y_true, int *y_pred, int k)
     {
         int true_idx = -1;
         int pred_idx = y_pred[i];
-
         int true_class = (int)(y_true->data[i][0] + 0.5);
+
         for (int j = 0; j < num_classes; j++)
-        {
             if (classes[j] == true_class)
             {
                 true_idx = j;
                 break;
             }
-        }
 
         if (true_idx >= 0 && pred_idx >= 0 && pred_idx < k)
             confusion_matrix[true_idx][pred_idx]++;
     }
 
-    printf("\n" CYAN_COLOR "Matriz de Confusion (K-Means):\n" RESET_COLOR);
-    printf("         ");
+    fprintf(stdout, CYAN_COLOR "\nMatriz de Confusion (K-Means):\n" RESET_COLOR);
+
+    fprintf(stdout, "         ");
     for (int i = 0; i < k; i++)
-        printf("Pred %d  ", i);
-    printf("\n");
+        fprintf(stdout, "Pred %d  ", i);
+    fprintf(stdout, "\n");
 
     for (int i = 0; i < num_classes; i++)
     {
-        printf("Real %d | ", classes[i]);
+        fprintf(stdout, "Real %d | ", classes[i]);
+
         for (int j = 0; j < k; j++)
         {
             if (confusion_matrix[i][j] == 0)
@@ -294,8 +291,10 @@ void print_confusion_matrix_kmeans(Matrix *y_true, int *y_pred, int k)
             else
                 printf(RED_COLOR "%6d" RESET_COLOR "  ", confusion_matrix[i][j]);
         }
+
         printf("\n");
     }
+
     printf("\n");
 }
 
@@ -315,12 +314,14 @@ void export_results_kmeans_to_csv(Matrix *y_true, int *y_pred, int k, const char
     {
         double current_class = y_true->data[i][0];
         int found = 0;
+
         for (int j = 0; j < num_classes; j++)
             if (classes[j] == current_class)
             {
                 found = 1;
                 break;
             }
+
         if (!found && num_classes < MAX_CLASSES)
         {
             classes[num_classes] = current_class;

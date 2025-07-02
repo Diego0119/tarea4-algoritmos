@@ -27,9 +27,9 @@ double euclidean_distance(const double *, const double *, int);
 void assign_clusters(Matrix *, Matrix *, int *);
 void update_centroids(Matrix *, Matrix *, int *, int);
 int has_converged(Matrix *, Matrix *, double);
-Matrix *initialize_centroids_kmeans_pp(Matrix *data, int k); // funcion de optimizacion
-void print_confusion_matrix_kmeans(Matrix *y_true, int *y_pred, int k);
-void export_results_kmeans_to_csv(Matrix *y_true, int *y_pred, int k, const char *filename);
-void exec_kmeans(CSVData *csv_data, int k, int max_iters, double tol);
+Matrix *initialize_centroids_kmeans_pp(Matrix *, int);
+void print_confusion_matrix_kmeans(Matrix *, int *, int);
+void export_results_kmeans_to_csv(Matrix *, int *, int, const char *);
+void exec_kmeans(CSVData *, int, int, double);
 
 #endif
