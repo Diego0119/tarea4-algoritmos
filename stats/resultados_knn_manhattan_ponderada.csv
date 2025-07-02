@@ -1,5 +1,5 @@
 Metodo,K,Clases
-Euclidiana,1,0;1;2
+Manhattan Ponderada,1,0;1;2
 Clase,Precision,Recall,F1-Score
 0,1.0000,1.0000,1.0000
 1,1.0000,1.0000,1.0000
