@@ -1,32 +1,37 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
-csv_path = 'stats/resultados_lr.csv'  
-data = pd.read_csv(csv_path)
+filename = 'stats/resultados_lr.csv'  
+df = pd.read_csv(filename)
 
-data.columns = [col.lower() for col in data.columns]
+df.columns = df.columns.str.strip()
 
-# Ajuste para tus columnas: 'x', 'y_real', 'y_predicho'
-if 'x' in data.columns and 'y_real' in data.columns and 'y_predicho' in data.columns:
-    x = data['x']
-    y = data['y_real']
-else:
-    print('Columnas detectadas:', data.columns)
-    raise ValueError('Ajusta los nombres de columna en el script.')
+coefficients = df['X'].dropna().values 
+predictions = df['Y predicción'].dropna().values 
 
-# Ajuste por mínimos cuadrados para graficar la recta de regresión
-coef = np.polyfit(x, y, 1)  # Ajuste lineal: grado 1
-x_line = np.linspace(x.min(), x.max(), 100)
-y_line = np.polyval(coef, x_line)
+X = np.linspace(0, 20, num=30)
+y = 0.5 * X + 0.1 + np.random.randn(30) * 0.2  
 
-plt.figure(figsize=(10,6))
-plt.scatter(x, y, color='blue', label='Datos reales')
-plt.plot(x_line, y_line, color='red', label='Regresion (ajuste lineal)')
-plt.xlabel('Longitud del Petalo')
-plt.ylabel('Ancho del Petalo')
-plt.title('Regresion Lineal: Longitud vs Ancho del Petalo')
+# Graficar los puntos de datos reales
+plt.scatter(X, y, color='blue', label='Datos reales')
+
+# Graficar la línea de regresión utilizando los coeficientes
+plt.plot(X, coefficients[0] * X + coefficients[1], color='red', label='Regresión')
+
+# Añadir etiquetas y título
+plt.xlabel('Longitud del Pétalo')
+plt.ylabel('Ancho del Pétalo')
+plt.title('Regresión Lineal: Longitud vs Ancho del Pétalo')
+
+# Añadir leyenda
 plt.legend()
+
+# Agregar cuadrículas al fondo
 plt.grid(True)
+
+# Guardar el gráfico como imagen
 plt.savefig('plots/regresion_lineal.png')
+
+# Mostrar el gráfico
 plt.show()

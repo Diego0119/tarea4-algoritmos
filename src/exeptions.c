@@ -117,7 +117,6 @@ void iterations_parameter_error(const char *file, int line)
 
 void create_linear_regression_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test, LinearRegression *lr)
 {
-    linear_regression_free(lr);
     matrix_free(X_train);
     matrix_free(y_train);
     matrix_free(X_test);
@@ -127,7 +126,6 @@ void create_linear_regression_error(const char *file, int line, Matrix *X_train,
 
 void predict_linear_regression_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test, LinearRegression *lr)
 {
-    linear_regression_free(lr);
     matrix_free(X_train);
     matrix_free(y_train);
     matrix_free(X_test);
@@ -141,4 +139,9 @@ void kmeans_fit_error(const char *file, int line, Matrix *X)
     if (X)
         matrix_free(X);
     exit(EXIT_FAILURE);
+}
+
+void memory_error(const char* file, int line, const char* message) {
+    fprintf(stderr, "Error de memoria en %s:%d: %s\n", file, line, message);
+    exit(EXIT_FAILURE);  // Salir con error
 }
