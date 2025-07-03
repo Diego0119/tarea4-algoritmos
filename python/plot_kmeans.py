@@ -2,10 +2,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-iris_path = '../data/iris.csv'
+iris_path = './data/iris.csv'
 iris = pd.read_csv(iris_path)
 
-clusters_path = '../stats/resultados_kmeans.csv'
+clusters_path = './stats/resultados_kmeans.csv'
 clusters = pd.read_csv(clusters_path, on_bad_lines='skip')
 clusters = clusters.iloc[:len(iris)] 
 
@@ -27,4 +27,5 @@ plt.ylabel('Petal Width')
 plt.title('Clusters K-Means en Iris Dataset')
 plt.legend()
 plt.grid(True)
+plt.savefig('plots/k-means.png')
 plt.show()
