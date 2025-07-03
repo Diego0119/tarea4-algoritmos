@@ -2,36 +2,33 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-filename = 'stats/resultados_lr.csv'  
-df = pd.read_csv(filename)
+def main():
+    # Lee el CSV de resultados generado por el modelo en C
+    df = pd.read_csv('stats/resultados_lr.csv')
+    df.columns = df.columns.str.strip()  # Limpia espacios en los nombres de columna
+    x = df['x'].values
+    y_real = df['y_realista'].values
+    y_pred = df['y_prediccion'].values
 
-df.columns = df.columns.str.strip()
+    # Ordenar por x para graficar la línea correctamente
+    idx = np.argsort(x)
+    x_sorted = x[idx]
+    y_pred_sorted = y_pred[idx]
 
-coefficients = df['X'].dropna().values 
-predictions = df['Y predicción'].dropna().values 
+    plt.figure(figsize=(10, 6))
+    # Puntos reales
+    plt.scatter(x, y_real, label='Datos reales', color='blue')
+    # Línea de predicción del modelo en C
+    plt.plot(x_sorted, y_pred_sorted, label='Regresión', color='red', linewidth=2)
 
-X = np.linspace(0, 20, num=30)
-y = 0.5 * X + 0.1 + np.random.randn(30) * 0.2  
+    plt.xlabel('Longitud del Pétalo')
+    plt.ylabel('Ancho del Pétalo')
+    plt.title('Regresión Lineal: Longitud vs Ancho del Pétalo')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("plots/regresion_lineal.png")
+    plt.show()
 
-# Graficar los puntos de datos reales
-plt.scatter(X, y, color='blue', label='Datos reales')
-
-# Graficar la línea de regresión utilizando los coeficientes
-plt.plot(X, coefficients[0] * X + coefficients[1], color='red', label='Regresión')
-
-# Añadir etiquetas y título
-plt.xlabel('Longitud del Pétalo')
-plt.ylabel('Ancho del Pétalo')
-plt.title('Regresión Lineal: Longitud vs Ancho del Pétalo')
-
-# Añadir leyenda
-plt.legend()
-
-# Agregar cuadrículas al fondo
-plt.grid(True)
-
-# Guardar el gráfico como imagen
-plt.savefig('plots/regresion_lineal.png')
-
-# Mostrar el gráfico
-plt.show()
+if __name__ == '__main__':
+    main()

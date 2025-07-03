@@ -76,17 +76,7 @@ void parse_args(int argc, char *argv[])
                 if (tolerance <= 0.0)
                     tolerance = 1e-6;
 
-                CSVData *csv_data = load_csv_data(filename, 1, 0, ',');
-                if (!csv_data)
-                    read_csv_error(__FILE__, __LINE__, filename);
-
-                fprintf(stdout, GREEN_COLOR "\nDatos cargados correctamente desde: %s.\n" RESET_COLOR, filename);
-
-                print_csv_data(csv_data);
-
-                exec_linear_regression(csv_data, learning_rate, max_iterations, tolerance);
-
-                csv_free(csv_data);
+                exec_linear_regression_from_csv(filename, learning_rate, max_iterations, tolerance, LR_METHOD, LR_REGULARIZATION, LR_LAMBDA);
             }
             else
                 argument_error("Faltan argumentos para regresión lineal", __FILE__, __LINE__);
