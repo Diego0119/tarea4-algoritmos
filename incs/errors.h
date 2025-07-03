@@ -31,7 +31,7 @@ void learning_rate_parameter_error(const char *, int);
 void iterations_parameter_error(const char *, int);
 void create_linear_regression_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, LinearRegression *);
 void predict_linear_regression_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, LinearRegression *);
-void kmeans_fit_error(const char *file, int line, Matrix *X);
-void memory_error(const char* file, int line, const char* message);
+void kmeans_fit_error(const char *, int, Matrix *);
+void memory_error(const char *, int);
 
 #endif

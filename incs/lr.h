@@ -35,13 +35,13 @@ typedef struct
 } RegressionMetrics;
 
 // Funciones del algoritmo de regresion lineal
-void export_results_to_csv(Matrix* weights, Matrix* predictions, Matrix* y, Matrix* X, const char* filename, double r2, double mse, double mae);
-void train_linear_regression(LinearRegression* model, Matrix* X, Matrix* y, int max_iter, double learning_rate, double lambda, const char* regularization_type, double tolerance);
-void exec_linear_regression_from_csv(const char *filename, double learning_rate, int max_iterations, double tolerance, const char* regularization_type, double lambda);
-void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_iterations, double tolerance);
+void export_results_to_csv(Matrix *, Matrix *, Matrix *, Matrix *, const char *, double, double, double);
+void train_linear_regression(LinearRegression *, Matrix *, Matrix *, int, double, double, const char *, double);
+void exec_linear_regression_from_csv(const char *, double, int, double, const char *, double);
+void exec_linear_regression(CSVData *, double, int, double);
 double linear_regression_mse(Matrix *, Matrix *);
 double linear_regression_r2_score(Matrix *, Matrix *);
-void free_linear_regression(LinearRegression* model);
+void free_linear_regression(LinearRegression *);
 Matrix *matrix_inverse(Matrix *);
 
 #endif

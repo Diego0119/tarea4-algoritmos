@@ -141,7 +141,7 @@ void kmeans_fit_error(const char *file, int line, Matrix *X)
     exit(EXIT_FAILURE);
 }
 
-void memory_error(const char* file, int line, const char* message) {
-    fprintf(stderr, "Error de memoria en %s:%d: %s\n", file, line, message);
-    exit(EXIT_FAILURE);  // Salir con error
+void memory_error(const char *file, int line)
+{
+    handle_error("Error de memoria", "No se pudo asignar memoria", file, line);
 }
