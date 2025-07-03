@@ -76,18 +76,6 @@ void parse_args(int argc, char *argv[])
                 if (tolerance <= 0.0)
                     tolerance = 1e-6;
 
-                // Parámetros adicionales
-                int use_normal_equations = 0;
-                double lambda = 0.1;
-                int regularization_type = 1;
-
-                if (optind + 3 < argc) {
-                    use_normal_equations = atoi(argv[optind + 3]); // 0 o 1
-                    lambda = atof(argv[optind + 4]);                // Valor de la regularización
-                    regularization_type = atoi(argv[optind + 5]);   // 1 para Ridge, 2 para Lasso
-                }
-
-                // Cargar datos CSV
                 CSVData *csv_data = load_csv_data(filename, 1, 0, ',');
                 if (!csv_data)
                     read_csv_error(__FILE__, __LINE__, filename);
@@ -96,11 +84,10 @@ void parse_args(int argc, char *argv[])
 
                 print_csv_data(csv_data);
 
-                exec_linear_regression(csv_data, learning_rate, max_iterations, tolerance, use_normal_equations, lambda, regularization_type);
+                exec_linear_regression(csv_data, learning_rate, max_iterations, tolerance);
 
                 csv_free(csv_data);
             }
-
             else
                 argument_error("Faltan argumentos para regresión lineal", __FILE__, __LINE__);
             break;
