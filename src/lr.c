@@ -185,6 +185,8 @@ void exec_linear_regression_from_csv(const char *filename, double learning_rate,
     printf("MAE: %f\n", mae);
     printf("R2: %f\n", r2);
     export_results_to_csv(predictions, csv_data->labels, csv_data->data, "resultados_lr.csv");
+    // Ejecutar script de visualización Python automáticamente
+    system("python3 python/plot_regresion_lineal.py");
     free_linear_regression(model);
     matrix_free(predictions);
     matrix_free(Xb);
