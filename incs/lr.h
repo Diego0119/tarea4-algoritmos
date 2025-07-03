@@ -35,23 +35,12 @@ typedef struct
 } RegressionMetrics;
 
 // Funciones del algoritmo de regresion lineal
-void exec_linear_regression(CSVData *, double, int, double);
-LinearRegression *linear_regression_create(int, double, int, double);
-void linear_regression_fit(LinearRegression *, Matrix *, Matrix *, RegressionMetrics **);
-Matrix *linear_regression_predict(LinearRegression *, Matrix *);
+void export_results_to_csv(Matrix* weights, Matrix* predictions, Matrix* y, Matrix* X, const char* filename);
+void train_linear_regression(LinearRegression* model, Matrix* X, Matrix* y, int max_iter, double learning_rate, double lambda, const char* regularization_type, double tolerance);
+void exec_linear_regression_from_csv(const char *filename, double learning_rate, int max_iterations, double tolerance, const char* regularization_type, double lambda);
+void exec_linear_regression(CSVData *csv_data, double learning_rate, int max_iterations, double tolerance);
 double linear_regression_mse(Matrix *, Matrix *);
 double linear_regression_r2_score(Matrix *, Matrix *);
-double linear_regression_mae(Matrix *, Matrix *);
-void linear_regression_fit_normal(LinearRegression *, Matrix *, Matrix *, int, double);
-void linear_regression_fit_regularized(LinearRegression *, Matrix *, Matrix *, RegressionMetrics **, const char *, double);
-void linear_regression_fit_minibatch(LinearRegression *, Matrix *, Matrix *, RegressionMetrics **, int, const char *, double);
-void compare_batch_vs_minibatch(Matrix *, Matrix *, Matrix *, Matrix *, double, int, double, const char *, double);
-void linear_regression_free(LinearRegression *);
-void export_results_lr_to_csv(Matrix *, Matrix *, Matrix *, const char *);
-
-// Funciones auxiliares para la regresion lineal
-void gradient_descent_step(LinearRegression *, Matrix *, Matrix *, Matrix *);
-void regression_metrics_free(RegressionMetrics *);
-void normalize_features_with_stats(Matrix *, double *, double *, int);
+void free_linear_regression(LinearRegression* model);
 
 #endif
