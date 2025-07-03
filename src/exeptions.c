@@ -115,7 +115,7 @@ void iterations_parameter_error(const char *file, int line)
     handle_error("El valor de iteraciones es invalido", "Debe ser un entero positivo mayor que 0", file, line);
 }
 
-void create_linear_regression_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test, LinearRegression *lr)
+void create_linear_regression_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test)
 {
     matrix_free(X_train);
     matrix_free(y_train);
@@ -124,7 +124,7 @@ void create_linear_regression_error(const char *file, int line, Matrix *X_train,
     handle_error("No se pudo crear el modelo de regresion lineal", "Memoria insuficiente", file, line);
 }
 
-void predict_linear_regression_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test, LinearRegression *lr)
+void predict_linear_regression_error(const char *file, int line, Matrix *X_train, Matrix *y_train, Matrix *X_test, Matrix *y_test)
 {
     matrix_free(X_train);
     matrix_free(y_train);
