@@ -37,14 +37,14 @@ run-all: all
 	./$(BUILD_DIR)/$(EXEC) -h
 	./$(BUILD_DIR)/$(EXEC) -v
 	./$(BUILD_DIR)/$(EXEC) -k ./data/iris.csv 1 
-	./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.01 2000 1e-8
+	./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.1 2000 1e-2
 	./$(BUILD_DIR)/$(EXEC) -m ./data/iris.csv 3 100 1e-4
 
 run-all-val: all
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -h
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -v
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -k ./data/iris.csv 1
-	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.01 2000 1e-8
+	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.1 2000 1e-2
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -m ./data/iris.csv 3 100 1e-4
 
 run-knn:
@@ -52,9 +52,9 @@ run-knn:
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -k ./data/iris.csv 1
 
 run-lr:
-	./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.01 2000 1e-8
-	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.01 2000 1e-8
+	./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.1 2000 1e-4
+	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.1 2000 1e-2
 
 run-km:
 	./$(BUILD_DIR)/$(EXEC) -m ./data/iris.csv 3 100 1e-4
-	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -m ./data/iris.csv 3 100 1e-4
+	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -m ./data/iris.csv 3 100 1e-2
