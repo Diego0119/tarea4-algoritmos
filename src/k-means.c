@@ -23,7 +23,7 @@ void exec_kmeans(CSVData *csv_data, int k, int max_iters, double tol)
     if (!result)
         kmeans_fit_error(__FILE__, __LINE__, X);
 
-    fprintf(stdout, GREEN_COLOR "\nK-Means ajustado correctamente (k=%d, iter máx=%d, tol=%.5f)\n\n" RESET_COLOR, k, max_iters, tol);
+    fprintf(stdout, GREEN_COLOR "\nK-Means ajustado correctamente (k=%d, iter max=%d, tol=%.5f)\n\n" RESET_COLOR, k, max_iters, tol);
 
     fprintf(stdout, YELLOW_COLOR "Primeras 5 asignaciones:\n\n" RESET_COLOR);
     for (int i = 0; i < 5 && i < X->rows; i++)
@@ -32,11 +32,14 @@ void exec_kmeans(CSVData *csv_data, int k, int max_iters, double tol)
     print_confusion_matrix_kmeans(y_true, result->labels, k);
 
     export_results_kmeans_to_csv(y_true, result->labels, k, "stats/resultados_kmeans.csv");
+
     fprintf(stdout, GREEN_COLOR "Resultados exportados a stats/resultados_kmeans.csv\n\n" RESET_COLOR);
 
     int status = system("python3 python/plot_kmeans.py");
     if (status == -1)
-        fprintf(stderr, RED_COLOR "Error al ejecutar script Python.\n" RESET_COLOR);
+        python_script_error(__FILE__, __LINE__, "python/plot_kmeans.py");
+
+    fprintf(stdout, GREEN_COLOR "Grafico generado exportado a plots/k-means.png\n\n" RESET_COLOR);
 
     kmeans_free(result);
 }

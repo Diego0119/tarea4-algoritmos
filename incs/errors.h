@@ -33,5 +33,6 @@ void create_linear_regression_error(const char *, int, Matrix *, Matrix *, Matri
 void predict_linear_regression_error(const char *, int, Matrix *, Matrix *, Matrix *, Matrix *, LinearRegression *);
 void kmeans_fit_error(const char *, int, Matrix *);
 void memory_error(const char *, int);
+void python_script_error(const char *, int, const char *);
 
 #endif

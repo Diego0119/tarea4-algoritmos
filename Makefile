@@ -56,5 +56,5 @@ run-lr:
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -l ./data/iris.csv 0.01 2000 1e-8
 
 run-km:
-	./$(BUILD_DIR)/$(EXEC) -k ./data/iris.csv 3 100 1e-4
+	./$(BUILD_DIR)/$(EXEC) -m ./data/iris.csv 3 100 1e-4
 	valgrind --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(BUILD_DIR)/$(EXEC) -m ./data/iris.csv 3 100 1e-4

@@ -45,7 +45,7 @@ void show_help(void)
 // Muestra la versión del programa
 void show_version(void)
 {
-    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 4.5.9\n\n" RESET_COLOR);
+    fprintf(stdout, CYAN_COLOR "\nVersion del programa: 5.0.2\n\n" RESET_COLOR);
     exit(EXIT_SUCCESS);
 }
 

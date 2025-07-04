@@ -28,7 +28,6 @@ def main():
     plt.grid(True)
     plt.tight_layout()
     plt.savefig("plots/regresion_lineal.png")
-    plt.show()
 
 if __name__ == '__main__':
     main()

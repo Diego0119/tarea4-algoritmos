@@ -145,3 +145,8 @@ void memory_error(const char *file, int line)
 {
     handle_error("Error de memoria", "No se pudo asignar memoria", file, line);
 }
+
+void python_script_error(const char *file, int line, const char *script_name)
+{
+    handle_error("No se pudo ejecutar el script Python", script_name, file, line);
+}
