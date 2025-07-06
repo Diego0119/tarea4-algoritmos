@@ -40,6 +40,10 @@ void parse_args(int argc, char *argv[])
             {
                 const char *filename = optarg;
 
+                const char *extension = strrchr(filename, '.');
+                if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx")))
+                    csv_extension_error(__FILE__, __LINE__, filename);
+
                 int k = atoi(argv[optind]);
                 if (k <= 0 || k % 2 == 0)
                     k_parameter_error(__FILE__, __LINE__);
@@ -64,6 +68,10 @@ void parse_args(int argc, char *argv[])
             {
                 const char *filename = optarg;
 
+                const char *extension = strrchr(filename, '.');
+                if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx")))
+                    csv_extension_error(__FILE__, __LINE__, filename);
+
                 double learning_rate = atof(argv[optind]);
                 if (learning_rate <= 0.0)
                     learning_rate_parameter_error(__FILE__, __LINE__);
@@ -85,6 +93,10 @@ void parse_args(int argc, char *argv[])
             if (optarg && optind + 1 < argc)
             {
                 const char *filename = optarg;
+
+                const char *extension = strrchr(filename, '.');
+                if (extension == NULL || (strcmp(extension, ".csv") != 0 && strcmp(extension, ".xlsx")))
+                    csv_extension_error(__FILE__, __LINE__, filename);
 
                 int k = atoi(argv[optind]);
                 if (k <= 0 || k % 2 == 0)
