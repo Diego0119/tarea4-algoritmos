@@ -12,7 +12,6 @@
 #include "errors.h"
 #include "lr.h"
 #include "k-means.h"
-#include <unistd.h>
 
 // Se encarga de procesar los argumentos de la línea de comandos usando getopt (sin struct option)
 void parse_args(int argc, char *argv[])
@@ -35,7 +34,7 @@ void parse_args(int argc, char *argv[])
         case 'v':
             show_version();
             break;
-        case 'k': // AHORA SE EJECUTA ASÍ -> -k <archivo> <k>
+        case 'k':
             if (optarg && optind < argc)
             {
                 const char *filename = optarg;
@@ -63,7 +62,7 @@ void parse_args(int argc, char *argv[])
             else
                 argument_error("Faltan argumentos para KNN", __FILE__, __LINE__);
             break;
-        case 'l': // AHORA SE EJECUTA ASÍ -> -l <archivo> <lr> <max_iter> <tol>
+        case 'l':
             if (optarg && optind + 1 < argc)
             {
                 const char *filename = optarg;
@@ -89,7 +88,7 @@ void parse_args(int argc, char *argv[])
             else
                 argument_error("Faltan argumentos para regresión lineal", __FILE__, __LINE__);
             break;
-        case 'm': // AHORA SE EJECUTA ASÍ -> -m <archivo> <k> <max_iter> <tol>
+        case 'm':
             if (optarg && optind + 1 < argc)
             {
                 const char *filename = optarg;
