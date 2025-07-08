@@ -141,7 +141,7 @@ make all
 - Métricas: MSE, MAE, R²
 
 
-## K-Means Clustering
+## K-Means Clustering
 
 ```bash
 ./build/program.out -m ./data/iris.csv 3 100 1e-4
