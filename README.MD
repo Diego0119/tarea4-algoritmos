@@ -120,7 +120,7 @@ make all
 ./build/program.out -h    # Mostrar ayuda  
 ```
 
-## K-Nearest Neighbors
+## K-Nearest Neighbors
 
 ```bash
 ./build/program.out -k ./data/iris.csv 1
