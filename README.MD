@@ -90,7 +90,7 @@ numpy
 
 # Requisitos de Compilación 🛠️
 
-Dependencias del Sistema
+## Dependencias del Sistema
 
 GCC: Compilador GNU C
 Make: Herramienta de automatización de compilación
