@@ -21,37 +21,31 @@ void handle_error(const char *header, const char *detail, const char *file, int 
     exit(EXIT_FAILURE);
 }
 
-// Error de cantidad de argumentos por terminal
 void number_arguments_error(const char *file, int line)
 {
     handle_error("Numero de argumentos incorrecto", "Se esperaban mas argumentos", file, line);
 }
 
-// Error de argumento proporcionado por terminal
 void argument_error(const char *arg, const char *file, int line)
 {
     handle_error("Argumento proporcionado es invalido", arg, file, line);
 }
 
-// Error al abrir un archivo
 void open_file_error(const char *file, int line, const char *filename)
 {
     handle_error("No se pudo abrir el archivo", filename, file, line);
 }
 
-// Error al leer el archivo CSV de pruebas
 void read_csv_error(const char *file, int line, const char *filename)
 {
     handle_error("No se puedo leer el archivo CSV de pruebas", filename, file, line);
 }
 
-// Error al determinar las dimensiones del archivo CSV
 void dimensions_error(const char *file, int line, const char *filename)
 {
     handle_error("Dimensiones mal determinadas en el archivo CSV", filename, file, line);
 }
 
-// Error al crear la estructura CSVData
 void csv_struct_error(const char *file, int line, CSVData *csv_data)
 {
     if (csv_data != NULL)
@@ -60,7 +54,6 @@ void csv_struct_error(const char *file, int line, CSVData *csv_data)
     handle_error("No se pudo crear la estructura CSVData", "Memoria insuficiente", file, line);
 }
 
-// Error al crear la estructura Matrix
 void matrix_struct_error(const char *file, int line, Matrix *matrix)
 {
     if (matrix != NULL)
@@ -71,7 +64,7 @@ void matrix_struct_error(const char *file, int line, Matrix *matrix)
 
 void csv_extension_error(const char *file, int line, const char *filename)
 {
-    handle_error("La extension del archivo no es .csv", filename, file, line);
+    handle_error("La extension del archivo no es .csv o .xlsx", filename, file, line);
 }
 
 void train_valid_test_split_error(const char *file, int line)
@@ -104,7 +97,6 @@ void k_parameter_error(const char *file, int line)
     handle_error("El valor de k (numero de vecinos) es invalido", "Debe ser un entero positivo e impar", file, line);
 }
 
-// errores especificos de regresion lineal
 void learning_rate_parameter_error(const char *file, int line)
 {
     handle_error("El valor de learning rate es invalido", "Debe ser un numero positivo mayor que 0", file, line);
@@ -135,7 +127,7 @@ void predict_linear_regression_error(const char *file, int line, Matrix *X_train
 
 void kmeans_fit_error(const char *file, int line, Matrix *X)
 {
-    fprintf(stderr, RED_COLOR "Error en kmeans_fit en archivo %s, linea %d.\n" RESET_COLOR, file, line);
+    fprintf(stderr, RED_COLOR "kmeans_fit en archivo %s, linea %d.\n" RESET_COLOR, file, line);
     if (X)
         matrix_free(X);
     exit(EXIT_FAILURE);
@@ -143,7 +135,7 @@ void kmeans_fit_error(const char *file, int line, Matrix *X)
 
 void memory_error(const char *file, int line)
 {
-    handle_error("Error de memoria", "No se pudo asignar memoria", file, line);
+    handle_error("Memoria insuficiente", "No se pudo asignar memoria", file, line);
 }
 
 void python_script_error(const char *file, int line, const char *script_name)
